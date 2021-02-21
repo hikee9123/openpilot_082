@@ -317,8 +317,8 @@ static void ui_draw_debug(UIState *s)
 
 
   float  gyroBias = scene.liveParameters.getGyroBias();
-  float  angleOffset = scene.liveParameters.getAngleOffset();
-  float  angleOffsetAverage = scene.liveParameters.getAngleOffsetAverage();
+  float  angleOffset = scene.liveParameters.getAngleOffsetDeg();
+  float  angleOffsetAverage = scene.liveParameters.getAngleOffsetAverageDeg();
   float  stiffnessFactor = scene.liveParameters.getStiffnessFactor();
   float  steerRatio = scene.liveParameters.getSteerRatio();
   float  yawRate = scene.liveParameters.getYawRate();
