@@ -130,6 +130,8 @@ class LateralPlanner():
     self.angle_steers_des_mpc = 0.0
     self.angle_steers_des_time = 0.0
 
+    self.desired_steering_wheel_angle_rate_deg = 0.0
+    self.desired_steering_wheel_angle_deg = 0.0
 
 
   def atom_tune( self, v_ego_kph, sr_value,  atomTuning ):  
@@ -336,35 +338,35 @@ class LateralPlanner():
 
 
     # atom
-    #org_angle_steers_des = self.desired_steering_wheel_angle_deg
-    #if self.lane_change_state == LaneChangeState.laneChangeStarting:
-    #  xp = [50,70]
-    #  fp2 = [5,7]
-    #  limit_steers = interp( v_ego_kph, xp, fp2 )
-    #  self.desired_steering_wheel_angle_deg = self.limit_ctrl( org_angle_steers_des, limit_steers, desired_steering_wheel_angle_rate_deg )      
-    #elif steeringPressed:
-    #  delta_steer = org_angle_steers_des - desired_steering_wheel_angle_rate_deg
-    # if desired_steering_wheel_angle_rate_deg > 10 and steeringTorque > 0:
-    #    delta_steer = max( delta_steer, 0 )
-    #    delta_steer = min( delta_steer, DST_ANGLE_LIMIT )
-    #    self.desired_steering_wheel_angle_deg = desired_steering_wheel_angle_rate_deg + delta_steer
-    #  elif desired_steering_wheel_angle_rate_deg < -10  and steeringTorque < 0:
-    #    delta_steer = min( delta_steer, 0 )
-    #    delta_steer = max( delta_steer, -DST_ANGLE_LIMIT )        
-    #    self.desired_steering_wheel_angle_deg = desired_steering_wheel_angle_rate_deg + delta_steer
-    #  else:
-    #    if steeringTorque < 0:  # right
-    #      if delta_steer > 0:
-    #        self.desired_steering_wheel_angle_deg = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, desired_steering_wheel_angle_rate_deg )
-    #    elif steeringTorque > 0:  # left
-    #      if delta_steer < 0:
-    #        self.desired_steering_wheel_angle_deg = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, desired_steering_wheel_angle_rate_deg )
+    org_angle_steers_des = self.desired_steering_wheel_angle_deg
+    if self.lane_change_state == LaneChangeState.laneChangeStarting:
+      xp = [50,70]
+      fp2 = [5,7]
+      limit_steers = interp( v_ego_kph, xp, fp2 )
+      self.desired_steering_wheel_angle_deg = self.limit_ctrl( org_angle_steers_des, limit_steers, steering_wheel_angle_deg )      
+    elif steeringPressed:
+      delta_steer = org_angle_steers_des - steering_wheel_angle_deg
+      if steering_wheel_angle_deg > 10 and steeringTorque > 0:
+        delta_steer = max( delta_steer, 0 )
+        delta_steer = min( delta_steer, DST_ANGLE_LIMIT )
+        self.desired_steering_wheel_angle_deg = steering_wheel_angle_deg + delta_steer
+      elif steering_wheel_angle_deg < -10  and steeringTorque < 0:
+        delta_steer = min( delta_steer, 0 )
+        delta_steer = max( delta_steer, -DST_ANGLE_LIMIT )        
+        self.desired_steering_wheel_angle_deg = steering_wheel_angle_deg + delta_steer
+      else:
+        if steeringTorque < 0:  # right
+          if delta_steer > 0:
+            self.desired_steering_wheel_angle_deg = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, steering_wheel_angle_deg )
+        elif steeringTorque > 0:  # left
+          if delta_steer < 0:
+            self.desired_steering_wheel_angle_deg = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, steering_wheel_angle_deg )
 
-    #elif v_ego_kph < 30:  # 30
-    #  xp = [15,30]
-    #  fp2 = [3,5]
-    #  limit_steers = interp( v_ego_kph, xp, fp2 )
-    #  self.desired_steering_wheel_angle_deg = self.limit_ctrl( org_angle_steers_des, limit_steers, desired_steering_wheel_angle_rate_deg )
+    elif v_ego_kph < 30:  # 30
+      xp = [15,30]
+      fp2 = [3,5]
+      limit_steers = interp( v_ego_kph, xp, fp2 )
+      self.desired_steering_wheel_angle_deg = self.limit_ctrl( org_angle_steers_des, limit_steers, steering_wheel_angle_deg )
 
 
     #  Check for infeasable MPC solution
