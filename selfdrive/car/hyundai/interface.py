@@ -21,6 +21,8 @@ class CarInterface(CarInterfaceBase):
     self.meg_timer = 0
     self.meg_name = 0
     self.pre_button = 0
+    self.pcm_enable_cmd = False
+
 
 
   @staticmethod

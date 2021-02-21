@@ -38,7 +38,8 @@ class CarInterfaceBase():
 
     self.cruise_enabled_prev = True
     self.pcm_enable_prev = False
-    self.pcm_enable_cmd = False       
+    self.pcm_enable_cmd = False
+
 
   @staticmethod
   def calc_accel_override(a_ego, a_target, v_ego, v_target):
