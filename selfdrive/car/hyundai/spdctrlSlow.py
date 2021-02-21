@@ -13,7 +13,7 @@ class SpdctrlSlow(SpdController):
         self.cv_Dist = -4
 
 
-    def update_lead(self, CS,  dRel, yRel, vRel):
+    def update_lead(self, CS,  dRel, vRel):
         lead_set_speed = self.cruise_set_speed_kph
         lead_wait_cmd = 600
         self.seq_step_debug = 0

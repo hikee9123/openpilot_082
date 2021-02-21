@@ -46,13 +46,12 @@ class CarController():
     self.steer_torque_ratio_dir = 1
 
     self.dRel = 0
-    self.yRel = 0
     self.vRel = 0
 
     self.movAvg = moveavg1.MoveAvg()
     self.timer1 = tm.CTime1000("time")
     self.model_speed = 0
-    self.model_sum = 0
+
     
     # hud
     self.hud_timer_left = 0
@@ -209,8 +208,6 @@ class CarController():
 
     return  param, dst_steer
 
-  #def update(self, enabled, CS, frame, actuators, pcm_cancel_cmd, visual_alert,
-  #           left_lane, right_lane, left_lane_depart, right_lane_depart):
 
   def update(self, c, CS, frame, sm, CP ):
     if self.CP != CP:
@@ -221,11 +218,11 @@ class CarController():
     pcm_cancel_cmd = c.cruiseControl.cancel
 
     path_plan = sm['lateralPlan']
-    #self.dRel, self.yRel, self.vRel = SpdController.get_lead( sm )
-    #if self.SC is not None:
-    #  self.model_speed, self.model_sum = self.SC.calc_va(  sm, CS.out.vEgo  )
-    #else:
-    self.model_speed = self.model_sum = 0
+    self.dRel, self.vRel = SpdController.get_lead( sm )
+    if self.SC is not None:
+      self.model_speed = self.SC.calc_va(  sm, CS.out.vEgo  )
+    else:
+      self.model_speed =  0
 
     # Steering Torque
     param, dst_steer = self.steerParams_torque( CS, c.actuators, path_plan )

@@ -312,7 +312,7 @@ uint8_t binary_object_store_desc[] = {
   // https://github.com/WICG/webusb/issues/49
   // other implementations use various other indexed to leverate this no-longer-valid feature. we wont.
   // the spec says we *must* reply to index 0x03 with the url, so we'll hint that that's the right index
-  0x03, // iLandingPage, URL descriptor index of the deviceâ€™s landing page.
+  0x03, // iLandingPage, URL descriptor index of the device?™s landing page.
 
   // -------------------------------------------------
   // WinUSB descriptor
@@ -842,7 +842,7 @@ void usb_irqhandler(void) {
       // TODO: why was this here? fires when TX buffers when we can't clear NAK
       // USBx_OUTEP(3)->DOEPTSIZ = (1U << 19) | 0x40U;
       // USBx_OUTEP(3)->DOEPCTL |= USB_OTG_DOEPCTL_CNAK;
-    } else if ((USBx_OUTEP(3)->DOEPINT) != 0 && (USBx_OUTEP(3)->DOEPINT) != 0x10) {
+    } else if ((USBx_OUTEP(3)->DOEPINT) != 0) {
       puts("OUTEP3 error ");
       puth(USBx_OUTEP(3)->DOEPINT);
       puts("\n");

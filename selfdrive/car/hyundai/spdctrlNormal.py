@@ -13,13 +13,13 @@ class SpdctrlNormal(SpdController):
         self.cv_Raio = 0.6
         self.cv_Dist = -5
 
-    def update_lead(self, CS,  dRel, yRel, vRel):
+    def update_lead(self, CS,  dRel, vRel):
         lead_set_speed = self.cruise_set_speed_kph
         lead_wait_cmd = 600
         if int(self.cruise_set_mode) != 2:
             return lead_wait_cmd, lead_set_speed
 
-        #dRel, yRel, vRel = self.get_lead( sm, CS )
+        #dRel = self.get_lead( sm, CS )
         if CS.lead_distance < 150:
             dRel = CS.lead_distance
             vRel = CS.lead_objspd

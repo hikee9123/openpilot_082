@@ -102,7 +102,6 @@ class SpdController():
         self.active_time = 0
 
         self.old_model_speed = 0
-        self.old_model_sum = 0
         self.old_model_init = 0
 
     def reset(self):
@@ -111,22 +110,11 @@ class SpdController():
         self.v_cruise = 0
         self.a_cruise = 0
 
+    def calc_laneProb(self, prob, v_ego):
+        if len(prob):
+            path = list(prob)
 
-
-
-    def calc_va(self, sm, v_ego):
-        md = sm['model']
-        if len(md.path.poly):
-            path = list(md.path.poly)
-
-            self.l_poly = np.array(md.leftLane.poly)
-            self.r_poly = np.array(md.rightLane.poly)
-            #self.p_poly = np.array(md.path.poly)
-
-            # Curvature of polynomial https://en.wikipedia.org/wiki/Curvature#Curvature_of_the_graph_of_a_function
-            # y = a x^3 + b x^2 + c x + d, y' = 3 a x^2 + 2 b x + c, y'' = 6 a x + 2 b
-            # k = y'' / (1 + y'^2)^1.5
-            # TODO: compute max speed without using a list of points and without numpy
+           # TODO: compute max speed without using a list of points and without numpy
             y_p = 3 * path[0] * self.path_x**2 + \
                 2 * path[1] * self.path_x + path[2]
             y_pp = 6 * path[0] * self.path_x + 2 * path[1]
@@ -138,35 +126,44 @@ class SpdController():
             # Don't slow down below 20mph
             model_speed = max(30.0 * CV.KPH_TO_MS, model_speed)
 
-            model_sum = curv[2] * 1000.  #np.sum( curv, 0 )
-
             model_speed = model_speed * CV.MS_TO_KPH
             if model_speed > MAX_SPEED:
                 model_speed = MAX_SPEED
         else:
             model_speed = MAX_SPEED
-            model_sum = 0
+
+        return  model_speed
+
+
+    def calc_va(self, sm, v_ego):
+        md = sm['modelV2']
+        self.lll_prob = md.laneLineProbs[1]
+        self.rll_prob = md.laneLineProbs[2]
+
+        model_speedl = calc_laneProb( self.lll_prob )
+        model_speedr = calc_laneProb( self.rll_prob )
+
+        model_speed = (model_speedl + model_speedr) * 0.5
+
 
         #model_speed = self.movAvg.get_min(model_speed, 10)
         delta_model = model_speed - self.old_model_speed
         if self.old_model_init < 10:
             self.old_model_init += 1
             self.old_model_speed = model_speed
-            self.old_model_sum = model_sum
         elif self.old_model_speed == model_speed:
             pass
         elif delta_model < -1:
             self.old_model_speed -= 1  #model_speed
-            self.old_model_sum = model_sum
         elif delta_model > 0:
             self.old_model_speed += 0.1
-            self.old_model_sum = model_sum
+
         else:
             self.old_model_speed = model_speed
-            self.old_model_sum = model_sum
 
 
-        return self.old_model_speed, self.old_model_sum
+
+        return self.old_model_speed
 
 
     def update_cruiseSW(self, CS ):
@@ -221,18 +218,16 @@ class SpdController():
 
     @staticmethod
     def get_lead( sm ):
-        lead_msg = sm['model'].lead
+        lead_msg = sm['modelV2'].leads[0]
         if lead_msg.prob > 0.5:
-            dRel = float(lead_msg.dist - RADAR_TO_CAMERA)
-            yRel = float(lead_msg.relY)
-            vRel = float(lead_msg.relVel)
+            dRel = float(lead_msg.xyva[0] - RADAR_TO_CAMERA)
+            vRel = float(lead_msg.xyva[2])
         else:
             dRel = 150
-            yRel = 0
             vRel = 0
 
 
-        return dRel, yRel, vRel
+        return dRel, vRel
 
 
 
@@ -267,7 +262,6 @@ class SpdController():
 
     def lead_control(self, CS, sm, CC ):
         dRel = CC.dRel
-        yRel = CC.yRel
         vRel = CC.vRel
         active_time = 10
         btn_type = Buttons.NONE
@@ -280,7 +274,7 @@ class SpdController():
 
 
         # 선행 차량 거리유지
-        lead_wait_cmd, lead_set_speed = self.update_lead( CS,  dRel, yRel, vRel)  
+        lead_wait_cmd, lead_set_speed = self.update_lead( CS,  dRel, vRel )  
 
         # 커브 감속.
         model_speed = CC.model_speed   #calc_va( CS.out.vEgo )
