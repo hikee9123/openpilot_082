@@ -266,8 +266,8 @@ static void screen_draw_button(UIState *s, int touch_x, int touch_y)
   // Set button to bottom left of screen
   //  if (s->vision_connected && s->plus_state == 0) {
   nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
-  if (s->vision_connected)
-  {
+  //if (s->vision_connected)
+  //{
     int btn_w = 150;
     int btn_h = 150;
     int btn_x = 1920 - btn_w;
@@ -296,7 +296,7 @@ static void screen_draw_button(UIState *s, int touch_x, int touch_y)
       nvgFillColor(s->vg, nvgRGBA(255, 150, 150, 200));
     }
     nvgText(s->vg, btn_x - 75, btn_y + 50, "REC", NULL);
-  }
+ // }
 
   if (captureState == CAPTURE_STATE_CAPTURING)
   {
@@ -340,7 +340,7 @@ static void screen_menu_button(UIState *s, int touch_x, int touch_y, int touched
   // Set button to bottom left of screen
   UIScene &scene = s->scene;
   //  if (s->vision_connected && s->plus_state == 0) {
-  if (s->vision_connected == 0) return;
+  //if (s->vision_connected == 0) return;
 
   nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
 
@@ -407,14 +407,8 @@ void dashcam(UIState *s, int touch_x, int touch_y, int touched)
   }
 
  
-  if (!s->vision_connected )
-  {
-    // Assume car is not in drive so stop recording
-    lock_current_video = false;
-    capture_cnt = 0;
-    stop_capture();
-  }
-  else if( lock_current_video == true  )
+
+  if( lock_current_video == true  )
   {
     if(  (s->scene.v_ego < 0.1 || !s->scene.engaged) )
     {
