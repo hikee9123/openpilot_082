@@ -221,7 +221,7 @@ class CarController():
     pcm_cancel_cmd = c.cruiseControl.cancel
 
     path_plan = sm['lateralPlan']
-    self.dRel, self.yRel, self.vRel = SpdController.get_lead( sm )
+    #self.dRel, self.yRel, self.vRel = SpdController.get_lead( sm )
     #if self.SC is not None:
     #  self.model_speed, self.model_sum = self.SC.calc_va(  sm, CS.out.vEgo  )
     #else:
