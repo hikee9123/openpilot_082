@@ -165,20 +165,20 @@ static void ui_draw_line(UIState *s, const line_vertices_data &vd, NVGcolor *col
 }
 
 
-static void ui_draw_track(UIState *s, line_vertices_data *pvd) 
+static void ui_draw_track(UIState *s, const line_vertices_data &vd) 
 {
   // kegman
-  if (pvd->cnt == 0) return;
+  if (vd.cnt == 0) return;
 
   nvgBeginPath(s->vg);
-  nvgMoveTo(s->vg, pvd->v[0].x, pvd->v[0].y);
-  for (int i=1; i<pvd->cnt; i++) {
-    nvgLineTo(s->vg, pvd->v[i].x, pvd->v[i].y);
+  nvgMoveTo(s->vg, vd.v[0].x, vd.v[0].y);
+  for (int i=1; i<vd.cnt; i++) {
+    nvgLineTo(s->vg, vd.v[i].x, vd.v[i].y);
   }
   nvgClosePath(s->vg);
 
   int  steerOverride = s->scene.car_state.getSteeringPressed();
-  float  output_scale = scene.controls_state.getOutput();
+  float  output_scale = s->scene.controls_state.getOutput();
 
   NVGpaint track_bg;
   if (s->scene.controls_state.getEnabled()) {
