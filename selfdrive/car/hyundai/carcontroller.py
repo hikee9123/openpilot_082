@@ -222,10 +222,10 @@ class CarController():
 
     path_plan = sm['lateralPlan']
     self.dRel, self.yRel, self.vRel = SpdController.get_lead( sm )
-    if self.SC is not None:
-      self.model_speed, self.model_sum = self.SC.calc_va(  sm, CS.out.vEgo  )
-    else:
-      self.model_speed = self.model_sum = 0
+    #if self.SC is not None:
+    #  self.model_speed, self.model_sum = self.SC.calc_va(  sm, CS.out.vEgo  )
+    #else:
+    self.model_speed = self.model_sum = 0
 
     # Steering Torque
     param, dst_steer = self.steerParams_torque( CS, c.actuators, path_plan )
