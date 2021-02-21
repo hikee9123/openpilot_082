@@ -48,7 +48,7 @@ class CarState(CarStateBase):
 
     self.SC = SpdController()
 
-    self.sm = messaging.SubMaster(['liveMapData'])
+    #self.sm = messaging.SubMaster(['liveMapData'])
 
 
   def update(self, cp, cp_cam):
