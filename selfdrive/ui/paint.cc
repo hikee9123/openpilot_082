@@ -461,6 +461,9 @@ static void ui_draw_vision_speed(UIState *s) {
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
   ui_draw_text(s, s->viz_rect.centerX(), 240, speed_str.c_str(), 96 * 2.5, val_color, "sans-bold");
   ui_draw_text(s, s->viz_rect.centerX(), 320, s->is_metric ? "km/h" : "mph", 36 * 2.5, COLOR_WHITE_ALPHA(200), "sans-regular");
+
+
+  ui_draw_debug( s );
 }
 
 static void ui_draw_vision_event(UIState *s) {
