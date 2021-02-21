@@ -316,13 +316,13 @@ static void ui_draw_debug(UIState *s)
   int  x_pos = 100+250; 
 
 
-  float  gyroBias = scene.liveParameters.getGyroBias();
+  //float  gyroBias = scene.liveParameters.getGyroBias();
   float  angleOffset = scene.liveParameters.getAngleOffsetDeg();
   float  angleOffsetAverage = scene.liveParameters.getAngleOffsetAverageDeg();
   float  stiffnessFactor = scene.liveParameters.getStiffnessFactor();
   float  steerRatio = scene.liveParameters.getSteerRatio();
-  float  yawRate = scene.liveParameters.getYawRate();
-  float  posenetSpeed = scene.liveParameters.getPosenetSpeed();
+  //float  yawRate = scene.liveParameters.getYawRate();
+  //float  posenetSpeed = scene.liveParameters.getPosenetSpeed();
 
 
   float  planSteerRatio = scene.lateralPlan.getSteerRatio();
@@ -453,8 +453,8 @@ static void ui_draw_vision_speed(UIState *s) {
 
   NVGcolor val_color = COLOR_WHITE;
 
-  bool  brakePress = scene.car_state.getBrakePressed();
-  bool  brakeLights = scene.car_state.getBrakeLights();
+  bool  brakePress = s->scene.car_state.getBrakePressed();
+  bool  brakeLights = s->scene.car_state.getBrakeLights();
 
   if( brakePress  ) val_color = COLOR_RED;
   else if( brakeLights ) val_color = nvgRGBA(201, 34, 49, 100);    
@@ -731,7 +731,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
     char val_str[16];
     char uom_str[6];
     NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
-    if (lead_data) {
+    //if (lead_d_rel1) {
       //show RED if less than 5 meters
       //show orange if less than 15 meters
       if((int)(lead_d_rel1) < 15) {
@@ -742,9 +742,9 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
       }
       // lead car relative distance is always in meters
       snprintf(val_str, sizeof(val_str), "%d", (int)lead_d_rel1);
-    } else {
-       snprintf(val_str, sizeof(val_str), "-");
-    }
+    //} else {
+    //   snprintf(val_str, sizeof(val_str), "-");
+    //}
     snprintf(uom_str, sizeof(uom_str), "m   ");
     bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "REL DIST",
         bb_rx, bb_ry, bb_uom_dx,
@@ -759,7 +759,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
     char val_str[16];
     char uom_str[6];
     NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
-    if (lead_data) {
+    //if (lead_v_rel1) {
       //show Orange if negative speed (approaching)
       //show Orange if negative speed faster than 5mph (approaching fast)
       if((int)(lead_v_rel1) < 0) {
@@ -774,9 +774,9 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
       } else {
          snprintf(val_str, sizeof(val_str), "%d", (int)(lead_v_rel1 * 2.2374144 + 0.5));
       }
-    } else {
-       snprintf(val_str, sizeof(val_str), "-");
-    }
+    //} else {
+    //   snprintf(val_str, sizeof(val_str), "-");
+    //}
     if (s->is_metric) {
       snprintf(uom_str, sizeof(uom_str), "km/h");;
     } else {
@@ -857,7 +857,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
 
 static void bb_ui_draw_UI(UIState *s)
 {
-  const UIScene *scene = &s->scene;
+  //const UIScene *scene = &s->scene;
   const int bb_dml_w = 180;
   const int bb_dml_x = (s->viz_rect.x + (bdr_s * 2));
   const int bb_dml_y = (bdr_s + (bdr_s * 1.5)) + 220;
