@@ -30,6 +30,7 @@ def start_offroad():
   set_package_permissions()
   system("am start -n ai.comma.plus.offroad/.MainActivity")
   system("am startservice com.neokii.oproadlimit/.MainService")
+  pm_grant("com.neokii.openpilot", "android.permission.ACCESS_FINE_LOCATION")
   system("am startservice com.neokii.openpilot/.MainService")
 
 def set_package_permissions():
