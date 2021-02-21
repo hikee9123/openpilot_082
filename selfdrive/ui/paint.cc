@@ -177,7 +177,7 @@ static void ui_draw_track(UIState *s, line_vertices_data *pvd)
   }
   nvgClosePath(s->vg);
 
-  int  steerOverride = s->scene.controls_state.getSteerOverride();
+  int  steerOverride = s->scene.car_state.getSteeringPressed();
   float  output_scale = scene.controls_state.getOutput();
 
   NVGpaint track_bg;
