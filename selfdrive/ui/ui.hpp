@@ -131,6 +131,23 @@ typedef struct UIScene {
 
   // lead
   vertex_data lead_vertices[2];
+
+  // atom
+  int  dash_menu_no;
+  cereal::FrameData::Reader   frame;
+  cereal::CarControl::Reader carControl;
+  cereal::LateralPlan::Reader lateralPlan;
+  cereal::LiveParametersData::Reader   liveParameters;
+
+
+  cereal::GpsLocationData::Reader   gpsLocationExternal
+
+
+  struct _STATUS_
+  {
+      char text1[512];
+      char text2[512];
+  } alert;
 } UIScene;
 
 typedef struct UIState {
@@ -176,6 +193,10 @@ typedef struct UIState {
   bool sidebar_collapsed;
   Rect video_rect, viz_rect;
   float car_space_transform[6];
+
+
+  int   nFrame30;
+  int   nTimer;
 } UIState;
 
 void ui_init(UIState *s);

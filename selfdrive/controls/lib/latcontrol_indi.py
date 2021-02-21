@@ -95,6 +95,7 @@ class LatControlINDI():
       indi_log.active = False
       self.output_steer = 0.0
       self.delayed_output = 0.0
+      self.angle_steers_des = lat_plan.steeringAngleDeg
     else:
       self.angle_steers_des = lat_plan.steeringAngleDeg
       self.rate_steers_des = lat_plan.steeringRateDeg

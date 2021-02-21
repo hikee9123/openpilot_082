@@ -22,6 +22,9 @@ from selfdrive.swaglog import cloudlog
 from selfdrive.thermald.power_monitoring import PowerMonitoring
 from selfdrive.version import get_git_branch, terms_version, training_version
 
+import re
+import subprocess
+
 ThermalConfig = namedtuple('ThermalConfig', ['cpu', 'gpu', 'mem', 'bat', 'ambient'])
 
 FW_SIGNATURE = get_expected_signature()
@@ -200,7 +203,11 @@ def thermald_thread():
 
   thermal_config = get_thermal_config()
 
+
+  ts_last_ip = 0
+  ip_addr = '255.255.255.255' 
   while 1:
+    ts = sec_since_boot()
     pandaState = messaging.recv_sock(pandaState_sock, wait=True)
     msg = read_thermal(thermal_config)
 
@@ -262,6 +269,17 @@ def thermald_thread():
       msg.deviceState.batteryStatus = "Charging"
       msg.deviceState.batteryTempC = 0
 
+    # update ip every 10 seconds
+    if ts - ts_last_ip >= 10.:
+      try:
+        result = subprocess.check_output(["ifconfig", "wlan0"], encoding='utf8')  # pylint: disable=unexpected-keyword-arg
+        ip_addr = re.findall(r"inet addr:((\d+\.){3}\d+)", result)[0][0]
+      except:
+        ip_addr = 'N/A'
+      ts_last_ip = ts
+    msg.deviceState.ipAddr = ip_addr
+
+
     current_filter.update(msg.deviceState.batteryCurrent / 1e6)
 
     # TODO: add car battery voltage check
@@ -315,7 +333,11 @@ def thermald_thread():
     update_failed_count = 0 if update_failed_count is None else int(update_failed_count)
     last_update_exception = params.get("LastUpdateException", encoding='utf8')
 
-    if update_failed_count > 15 and last_update_exception is not None:
+
+    EnableLogger = int(params.get("RecordFront"))
+    if not EnableLogger:
+      pass
+    elif update_failed_count > 15 and last_update_exception is not None:
       if current_branch in ["release2", "dashcam"]:
         extra_text = "Ensure the software is correctly installed"
       else:
@@ -362,7 +384,12 @@ def thermald_thread():
     set_offroad_alert_if_changed("Offroad_HardwareUnsupported", pandaState is not None and not startup_conditions["hardware_supported"])
 
     # Handle offroad/onroad transition
-    should_start = all(startup_conditions.values())
+    is_rhd_region = int(Params().get("IsRHD"))
+    if is_rhd_region:
+      should_start = True   # user video
+    else:
+      should_start = all(startup_conditions.values())    
+    #should_start = all(startup_conditions.values())
     if should_start:
       if not should_start_prev:
         params.delete("IsOffroad")
@@ -408,6 +435,10 @@ def thermald_thread():
 
     should_start_prev = should_start
     startup_conditions_prev = startup_conditions.copy()
+
+
+    if usb_power:
+      pm.charging_ctrl( msg, ts, 60, 40 )    
 
     # report to server once per minute
     if (count % int(60. / DT_TRML)) == 0:

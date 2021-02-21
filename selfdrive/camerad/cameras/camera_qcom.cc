@@ -1237,7 +1237,7 @@ static void road_camera_start(CameraState *s) {
     inf_step = 512 - s->infinity_dac;
 
     // initial guess
-    s->lens_true_pos = 400;
+    s->lens_true_pos = 430;
   }
 
   // reset lens position

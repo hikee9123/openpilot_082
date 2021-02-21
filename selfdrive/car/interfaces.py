@@ -36,6 +36,10 @@ class CarInterfaceBase():
     if CarController is not None:
       self.CC = CarController(self.cp.dbc_name, CP, self.VM)
 
+    self.cruise_enabled_prev = True
+    self.pcm_enable_prev = False
+    self.pcm_enable_cmd = False       
+
   @staticmethod
   def calc_accel_override(a_ego, a_target, v_ego, v_target):
     return 1.
@@ -80,6 +84,28 @@ class CarInterfaceBase():
     ret.longitudinalTuning.kpV = [1.]
     ret.longitudinalTuning.kiBP = [0.]
     ret.longitudinalTuning.kiV = [1.]
+
+    ret.atomTuning.cvKPH    = [0.] 
+    ret.atomTuning.cvBPV    = [[200., 255.]]  # CV
+    ret.atomTuning.cvsMaxV  = [[385., 230.]]
+    ret.atomTuning.cvsdUpV  = [[3,3]]
+    ret.atomTuning.cvsdDnV  = [[7,5]]
+    
+    ret.atomTuning.sRKPH     = [0,]   # Speed  kph
+    ret.atomTuning.sRBPV     = [[0.]]
+    ret.atomTuning.sRlqrkiV      = [[0.015]]
+    ret.atomTuning.sRlqrscaleV   = [[1900.0]]
+
+    
+    ret.atomTuning.sRpidKpV      = [[0.25]]
+    ret.atomTuning.sRpidKiV      = [[0.02]]
+    ret.atomTuning.sRpidKdV      = [[1.5]]
+    ret.atomTuning.sRsteerRatioV = [[13.95]]
+    ret.atomTuning.sRsteerActuatorDelayV = [[0.1]]
+  
+    ret.lateralsRatom.deadzone = 0.1
+    ret.lateralsRatom.steerOffset = 0
+    ret.lateralsRatom.cameraOffset = 0    
     return ret
 
   # returns a car.CarState, pass in car.CarControl
@@ -87,7 +113,7 @@ class CarInterfaceBase():
     raise NotImplementedError
 
   # return sendcan, pass in a car.CarControl
-  def apply(self, c):
+  def apply(self, c, sm, CP):
     raise NotImplementedError
 
   def create_common_events(self, cs_out, extra_gears=[], gas_resume_speed=-1, pcm_enable=True):  # pylint: disable=dangerous-default-value
@@ -105,7 +131,7 @@ class CarInterfaceBase():
       events.add(EventName.wrongCarMode)
     if cs_out.espDisabled:
       events.add(EventName.espDisabled)
-    if cs_out.gasPressed:
+    if cs_out.gasPressed and self.CP.openpilotLongitudinalControl:
       events.add(EventName.gasPressed)
     if cs_out.stockFcw:
       events.add(EventName.stockFcw)
@@ -124,16 +150,33 @@ class CarInterfaceBase():
     # Disable on rising edge of gas or brake. Also disable on brake when speed > 0.
     # Optionally allow to press gas at zero speed to resume.
     # e.g. Chrysler does not spam the resume button yet, so resuming with gas is handy. FIXME!
-    if (cs_out.gasPressed and (not self.CS.out.gasPressed) and cs_out.vEgo > gas_resume_speed) or \
-       (cs_out.brakePressed and (not self.CS.out.brakePressed or not cs_out.standstill)):
-      events.add(EventName.pedalPressed)
+    if self.CP.openpilotLongitudinalControl:
+      if (cs_out.gasPressed and (not self.CS.out.gasPressed) and cs_out.vEgo > gas_resume_speed) or \
+        (cs_out.brakePressed and (not self.CS.out.brakePressed or not cs_out.standstill)):
+        events.add(EventName.pedalPressed)
 
     # we engage when pcm is active (rising edge)
-    if pcm_enable:
-      if cs_out.cruiseState.enabled and not self.CS.out.cruiseState.enabled:
+    #if pcm_enable:
+    #  if cs_out.cruiseState.enabled and not self.CS.out.cruiseState.enabled:
+    #    events.add(EventName.pcmEnable)
+    #  elif not cs_out.cruiseState.enabled:
+    #   events.add(EventName.pcmDisable)
+
+    if not pcm_enable:
+      pass
+    elif cs_out.cruiseState.enabled != self.cruise_enabled_prev:
+      self.cruise_enabled_prev = cs_out.cruiseState.enabled
+      if cs_out.cruiseState.enabled:
+        self.pcm_enable_cmd = True
+      else:
+        self.pcm_enable_cmd = False
+
+    if self.pcm_enable_prev != self.pcm_enable_cmd:
+      self.pcm_enable_prev = self.pcm_enable_cmd
+      if self.pcm_enable_cmd:
         events.add(EventName.pcmEnable)
-      elif not cs_out.cruiseState.enabled:
-        events.add(EventName.pcmDisable)
+      else:
+        events.add(EventName.pcmDisable)    
 
     return events
 

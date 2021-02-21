@@ -50,10 +50,10 @@ class TestCarInterfaces(unittest.TestCase):
 
       CC = car.CarControl.new_message()
       CC.enabled = True
-      for _ in range(10):
-        car_interface.update(CC, [])
-        car_interface.apply(CC)
-        car_interface.apply(CC)
+      #for _ in range(10):
+      #  car_interface.update(CC, [])
+      #  car_interface.apply(CC)
+      #  car_interface.apply(CC)
 
       # Test radar interface
       RadarInterface = importlib.import_module('selfdrive.car.%s.radar_interface' % car_params.carName).RadarInterface

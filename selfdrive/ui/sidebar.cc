@@ -6,6 +6,8 @@
 #include "paint.hpp"
 #include "sidebar.hpp"
 
+extern float  fFontSize;
+
 static void draw_background(UIState *s) {
 #ifdef QCOM
   const NVGcolor color = COLOR_BLACK_ALPHA(85);
@@ -14,6 +16,22 @@ static void draw_background(UIState *s) {
 #endif
   ui_fill_rect(s->vg, {0, 0, sbr_w, s->fb_h}, color);
 }
+
+            
+static void draw_sidebar_ip_addr(UIState *s) {
+  const int network_ip_w = 220;
+  const int network_ip_x = !s->sidebar_collapsed ? 38 : -(sbr_w); 
+  const int network_ip_y = 180;//255;
+
+  char network_ip_str[20];
+  snprintf(network_ip_str, sizeof(network_ip_str), "%s", s->scene.deviceState.getIpAddr().cStr());
+  nvgFillColor(s->vg, COLOR_YELLOW);
+  nvgFontSize(s->vg, 28);
+  nvgFontFace(s->vg, "sans-bold");  
+  nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+  nvgTextBox(s->vg, network_ip_x, network_ip_y, network_ip_w, network_ip_str, NULL);
+}
+
 
 static void draw_settings_button(UIState *s) {
   const float alpha = s->active_app == cereal::UiLayoutState::App::SETTINGS ? 1.0f : 0.65f;
@@ -57,7 +75,7 @@ static void draw_network_type(UIState *s) {
   const int network_w = 100;
   const char *network_type = network_type_map[s->scene.deviceState.getNetworkType()];
   nvgFillColor(s->vg, COLOR_WHITE);
-  nvgFontSize(s->vg, 48);
+  nvgFontSize(s->vg, 48*fFontSize);
   nvgFontFace(s->vg, "sans-regular");
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
   nvgTextBox(s->vg, network_x, network_y, network_w, network_type ? network_type : "--", NULL);
@@ -84,19 +102,19 @@ static void draw_metric(UIState *s, const char *label_str, const char *value_str
 
   if (!message_str) {
     nvgFillColor(s->vg, COLOR_WHITE);
-    nvgFontSize(s->vg, 78);
+    nvgFontSize(s->vg, 78*fFontSize);
     nvgFontFace(s->vg, "sans-bold");
     nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgTextBox(s->vg, rect.x + 50, rect.y + 50, rect.w - 60, value_str, NULL);
 
     nvgFillColor(s->vg, COLOR_WHITE);
-    nvgFontSize(s->vg, 48);
+    nvgFontSize(s->vg, 48*fFontSize);
     nvgFontFace(s->vg, "sans-regular");
     nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgTextBox(s->vg, rect.x + 50, rect.y + 50 + 66, rect.w - 60, label_str, NULL);
   } else {
     nvgFillColor(s->vg, COLOR_WHITE);
-    nvgFontSize(s->vg, 48);
+    nvgFontSize(s->vg, 48*fFontSize);
     nvgFontFace(s->vg, "sans-bold");
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
     nvgTextBox(s->vg, rect.x + 35, rect.y + (strchr(message_str, '\n') ? 40 : 50), rect.w - 50, message_str, NULL);
@@ -155,4 +173,5 @@ void ui_draw_sidebar(UIState *s) {
   draw_temp_metric(s);
   draw_panda_metric(s);
   draw_connectivity(s);
+  draw_sidebar_ip_addr(s);
 }

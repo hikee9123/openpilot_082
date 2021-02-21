@@ -36,14 +36,14 @@ class LanePlanner:
     self.r_lane_change_prob = 0.
 
 
-  def parse_model(self, md):
+  def parse_model(self, md, camera_offset):
     if len(md.laneLines) == 4 and len(md.laneLines[0].t) == TRAJECTORY_SIZE:
       self.ll_t = (np.array(md.laneLines[1].t) + np.array(md.laneLines[2].t))/2
       # left and right ll x is the same
       self.ll_x = md.laneLines[1].x
       # only offset left and right lane lines; offsetting path does not make sense
-      self.lll_y = np.array(md.laneLines[1].y) - CAMERA_OFFSET
-      self.rll_y = np.array(md.laneLines[2].y) - CAMERA_OFFSET
+      self.lll_y = np.array(md.laneLines[1].y) - CAMERA_OFFSET - camera_offset
+      self.rll_y = np.array(md.laneLines[2].y) - CAMERA_OFFSET - camera_offset
       self.lll_prob = md.laneLineProbs[1]
       self.rll_prob = md.laneLineProbs[2]
       self.lll_std = md.laneLineStds[1]

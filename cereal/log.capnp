@@ -304,6 +304,8 @@ struct DeviceState @0xa4d8b5af2aa492eb {
   ambientTempC @30 :Float32;
   thermalStatus @14 :ThermalStatus;
 
+  ipAddr @31 :Text;
+
   enum ThermalStatus {
     green @0;
     yellow @1;
@@ -516,6 +518,11 @@ struct ControlsState @0x97ff69c53601abf1 {
 
   cumLagMs @15 :Float32;
   canErrorCounter @57 :UInt32;
+
+  output @58 :Float32;
+  alertTextMsg1  @59 :Text;
+  alertTextMsg2  @60 :Text;
+  modelSpeed  @61 :Float32;
 
   lateralControlState :union {
     indiState @52 :LateralINDIState;
@@ -777,6 +784,8 @@ struct LateralPlan @0xe1e9318e2ae8b51e {
   desire @17 :Desire;
   laneChangeState @18 :LaneChangeState;
   laneChangeDirection @19 :LaneChangeDirection;
+  
+  steerRatio @22 :Float32;
 
   enum Desire {
     none @0;
