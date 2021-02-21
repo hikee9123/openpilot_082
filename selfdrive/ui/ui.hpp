@@ -140,7 +140,7 @@ typedef struct UIScene {
   cereal::LiveParametersData::Reader   liveParameters;
 
 
-  cereal::GpsLocationData::Reader   gpsLocationExternal
+  cereal::GpsLocationData::Reader   gpsLocationExternal;
 
 
   struct _STATUS_
