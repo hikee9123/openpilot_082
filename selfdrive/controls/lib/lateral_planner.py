@@ -190,14 +190,14 @@ class LateralPlanner():
     steering_wheel_angle_deg = sm['carState'].steeringAngleDeg
 
     v_ego_kph = v_ego * CV.MS_TO_KPH
-    self.steerActuatorDelay = self.atom_actuatorDelay( v_ego_kph, self.steering_wheel_angle_deg,  atomTuning )
+    self.steerActuatorDelay = self.atom_actuatorDelay( v_ego_kph, steering_wheel_angle_deg,  atomTuning )
 
     # Update vehicle model
     if lateralsRatom.learnerParams == 0:
       sr_value = steering_wheel_angle_deg
       sr = self.atom_tune( v_ego_kph, sr_value, atomTuning) 
     elif lateralsRatom.learnerParams == 2:
-      sr_value = self.steering_wheel_angle_deg
+      sr_value = steering_wheel_angle_deg
       sr = self.atom_tune( v_ego_kph, sr_value, atomTuning) 
     elif lateralsRatom.learnerParams == 3:
       sr_value = sm['controlsState'].modelSpeed
