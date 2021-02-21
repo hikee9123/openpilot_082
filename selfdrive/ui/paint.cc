@@ -250,7 +250,7 @@ static void ui_draw_vision_lane_lines(UIState *s) {
   }
 
   // paint path
-  ui_draw_track(s, &scene.track_vertices);
+  ui_draw_track(s, scene.track_vertices);
   //NVGpaint track_bg = nvgLinearGradient(s->vg, s->fb_w, s->fb_h, s->fb_w, s->fb_h * .4,
   //                                      COLOR_WHITE, COLOR_WHITE_ALPHA(0));
   //ui_draw_line(s, scene.track_vertices, nullptr, &track_bg);
@@ -328,15 +328,17 @@ static void ui_draw_debug(UIState *s)
   float  planSteerRatio = scene.lateralPlan.getSteerRatio();
   float  laneWidth = scene.lateralPlan.getLaneWidth();
 
-  float  fanSpeed = scene.deviceState.getFanSpeed();
-  float  cpuPerc = scene.deviceState.getCpuPerc();
+  float  fanSpeed = scene.deviceState.getFanSpeedPercentDesired();
+  float  cpuPerc = scene.deviceState.getCpuUsagePercent();
 
 
 
 
   //int standstill = scene.car_state.getStandstill();
-  int modeSel = scene.car_state.getModeSel();
-  //int cruiseSwState = scene.car_state.getCruiseSwState();  
+  
+  auto cruiseState = scene.car_state.getCruiseState();  
+  int modeSel = cruiseState.getModeSel();
+  float model_speed = scene.controls_state.getModelSpeed();
 
   nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
   if( scene.dash_menu_no  )  
@@ -350,7 +352,7 @@ static void ui_draw_debug(UIState *s)
 
     ui_print( s, x_pos, y_pos+0,   "sR:%.2f , %.2f  Fan:%.0f", steerRatio, planSteerRatio, fanSpeed/1000. );
     ui_print( s, x_pos, y_pos+50,  "aO:%.2f, %.2f", angleOffset, angleOffsetAverage );
-    ui_print( s, x_pos, y_pos+100, "sF:%.2f CV:%.0f", stiffnessFactor, scene.model_speed );
+    ui_print( s, x_pos, y_pos+100, "sF:%.2f CV:%.0f", stiffnessFactor, model_speed );
 
 
     //ui_print( s, x_pos, y_pos+200, "prob:%.2f, %.2f, %.2f, %.2f", scene.lane_line_probs[0], scene.lane_line_probs[1], scene.lane_line_probs[2], scene.lane_line_probs[3] );
@@ -451,8 +453,11 @@ static void ui_draw_vision_speed(UIState *s) {
 
   NVGcolor val_color = COLOR_WHITE;
 
-  if( scene.brakePress  ) val_color = COLOR_RED;
-  else if( scene.brakeLights ) val_color = nvgRGBA(201, 34, 49, 100);    
+  bool  brakePress = scene.car_state.getBrakePressed();
+  bool  brakeLights = scene.car_state.getBrakeLights();
+
+  if( brakePress  ) val_color = COLOR_RED;
+  else if( brakeLights ) val_color = nvgRGBA(201, 34, 49, 100);    
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
   ui_draw_text(s, s->viz_rect.centerX(), 240, speed_str.c_str(), 96 * 2.5, val_color, "sans-bold");
   ui_draw_text(s, s->viz_rect.centerX(), 320, s->is_metric ? "km/h" : "mph", 36 * 2.5, COLOR_WHITE_ALPHA(200), "sans-regular");
@@ -602,7 +607,7 @@ static void bb_ui_draw_measures_left(UIState *s, int bb_x, int bb_y, int bb_w )
     char val_str[16];
     char uom_str[6];
     NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
-    float cpuTemp = scene->maxCpuTemp[0];
+    float cpuTemp = maxCpuTemp[0];
 
       if( cpuTemp > 80) {
         val_color = nvgRGBA(255, 188, 3, 200);
@@ -718,15 +723,15 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
   float lead_d_rel1 = lead_data.getDRel();
   float lead_v_rel1 = lead_data.getVRel();
 
-  float angleSteers = scene->controls_state.getAngleSteers();
-  float angleSteersDes = scene->controls_state.getAngleSteersDes();
+  float angleSteers = scene->car_state.getSteeringAngleDeg();
+  float angleSteersDes = scene->controls_state.getSteeringAngleDesiredDeg();
   //add visual radar relative distance
   if( true )
   {
     char val_str[16];
     char uom_str[6];
     NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
-    if (scene->lead_status1) {
+    if (lead_data) {
       //show RED if less than 5 meters
       //show orange if less than 15 meters
       if((int)(lead_d_rel1) < 15) {
@@ -754,7 +759,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
     char val_str[16];
     char uom_str[6];
     NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
-    if (scene->lead_status1) {
+    if (lead_data) {
       //show Orange if negative speed (approaching)
       //show Orange if negative speed faster than 5mph (approaching fast)
       if((int)(lead_v_rel1) < 0) {
@@ -854,11 +859,11 @@ static void bb_ui_draw_UI(UIState *s)
 {
   const UIScene *scene = &s->scene;
   const int bb_dml_w = 180;
-  const int bb_dml_x = (scene->viz_rect.x + (bdr_s * 2));
+  const int bb_dml_x = (s->viz_rect.x + (bdr_s * 2));
   const int bb_dml_y = (bdr_s + (bdr_s * 1.5)) + 220;
 
   const int bb_dmr_w = 180;
-  const int bb_dmr_x = scene->viz_rect.x + scene->viz_rect.w - bb_dmr_w - (bdr_s * 2);
+  const int bb_dmr_x = s->viz_rect.x + s->viz_rect.w - bb_dmr_w - (bdr_s * 2);
   const int bb_dmr_y = (bdr_s + (bdr_s * 1.5)) + 220;
 
   bb_ui_draw_measures_right(s, bb_dml_x, bb_dml_y, bb_dml_w);
