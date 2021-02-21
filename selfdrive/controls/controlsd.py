@@ -158,22 +158,6 @@ class Controls:
     self.timer_alloowed = 1500
     self.timer_start = 1500
 
-  def auto_enable(self, CS):
-    if self.startup_event_init == None:
-      self.CI.pcm_enable_cmd = False
-      self.timer_alloowed = 500
-    elif self.hyundai_lkas or CS.vEgo < 15*CV.KPH_TO_MS or CS.gearShifter != 2:
-      if self.timer_alloowed < 100:
-        self.timer_alloowed = 100
-    elif self.state != State.enabled:
-      if self.timer_alloowed:
-        self.timer_alloowed -= 1
-      else:
-        self.timer_alloowed = 500
-        self.CI.pcm_enable_cmd = True
-        #self.events.add( EventName.pcmEnable )
-    else:
-        self.timer_alloowed = 100
 
   def update_events(self, CS):
     """Compute carEvents from carState"""
@@ -505,8 +489,8 @@ class Controls:
       # send car controls over can
       can_sends = self.CI.apply(CC, self.sm, self.CP)
       self.model_speed  = self.CI.CC.model_speed
-      if self.CI.pcm_enable_cmd:
-        self.pm.send('sendcan', can_list_to_can_capnp(can_sends, msgtype='sendcan', valid=CS.canValid))
+      #if self.CI.pcm_enable_cmd:
+      #  self.pm.send('sendcan', can_list_to_can_capnp(can_sends, msgtype='sendcan', valid=CS.canValid))
 
     force_decel = (self.sm['driverMonitoringState'].awarenessStatus < 0.) or \
                   (self.state == State.softDisabling)
