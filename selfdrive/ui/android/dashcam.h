@@ -410,7 +410,9 @@ void dashcam(UIState *s, int touch_x, int touch_y, int touched)
 
   if( lock_current_video == true  )
   {
-    if(  (s->scene.v_ego < 0.1 || !s->scene.engaged) )
+    float v_ego = s->scene.car_state.getVEgo();
+    int engaged = s->scene.controls_state.getEngageable();
+    if(  (v_ego < 0.1 || !engaged) )
     {
       elapsed_time = get_time() - stop_time;
       if( captureState == CAPTURE_STATE_CAPTURING && elapsed_time > 2 )
