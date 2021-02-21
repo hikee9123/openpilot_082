@@ -438,7 +438,7 @@ def thermald_thread():
 
 
     if usb_power:
-      pm.charging_ctrl( msg, ts, 60, 40 )    
+      power_monitor.charging_ctrl( msg, ts, 60, 40 )    
 
     # report to server once per minute
     if (count % int(60. / DT_TRML)) == 0:
