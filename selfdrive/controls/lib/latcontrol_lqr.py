@@ -77,7 +77,7 @@ class LatControlLQR():
     steering_angle = CS.steeringAngleDeg
 
     v_ego_kph = CS.vEgo * CV.MS_TO_KPH
-    self.ki, self.scale = self.atom_tune( v_ego_kph, CS.steeringAngle, CP )
+    self.ki, self.scale = self.atom_tune( v_ego_kph, CS.steeringAngleDeg, CP )
 
     # Subtract offset. Zero angle should correspond to zero torque
     self.angle_steers_des = lat_plan.steeringAngleDeg - lat_plan.angleOffsetDeg
