@@ -236,12 +236,12 @@ static void update_sockets(UIState *s) {
 
    if (sm.updated("lateralPlan"))
    {
-    scene.lateralPlan = sm["lateralPlan"].getPathPlan();
+    scene.lateralPlan = sm["lateralPlan"].getLateralPlan();
    } 
 
    if (sm.updated("carControl"))
    {
-    scene.carControl = sm["carControl"].getPathPlan();
+    scene.carControl = sm["carControl"].getCarControl();
    } 
  
 }
