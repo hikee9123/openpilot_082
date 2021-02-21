@@ -304,8 +304,8 @@ static void ui_draw_debug(UIState *s)
 {
   UIScene &scene = s->scene;
 
-  int ui_viz_rx = scene.viz_rect.x;
-  int ui_viz_rw = scene.viz_rect.w;
+  int ui_viz_rx = s->viz_rect.x;
+  int ui_viz_rw = s->viz_rect.w;
 
   char str_msg[512];
 
