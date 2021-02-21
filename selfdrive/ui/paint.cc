@@ -586,12 +586,12 @@ static void bb_ui_draw_measures_left(UIState *s, int bb_x, int bb_y, int bb_w )
 
   auto  maxCpuTemp = scene->deviceState.getCpuTempC();
   //auto  maxGpuTemp = scene->deviceState.getGpuTempC();
-  float  batteryTemp = scene->deviceState.getBat();
+  float  batteryTemp = scene->deviceState.getBatteryTempC();
   //add CPU temperature
 
 
-  float  gpsAccuracyUblox = scene.gpsLocationExternal.getAccuracy();
-  float  altitudeUblox = scene.gpsLocationExternal.getAltitude();
+  float  gpsAccuracyUblox = scene->gpsLocationExternal.getAccuracy();
+  float  altitudeUblox = scene->gpsLocationExternal.getAltitude();
   //float  bearingUblox = scene.gpsLocationExternal.getBearing();    
   //float  latitudeUblox = scene.gpsLocationExternal.getLatitude();
   //float  longitudeUblox = scene.gpsLocationExternal.getLongitude();
