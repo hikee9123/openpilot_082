@@ -19,7 +19,7 @@ import common.MoveAvg as moveavg1
 import copy
 
 VisualAlert = car.CarControl.HUDControl.VisualAlert
-LaneChangeState = log.lateralPlan.LaneChangeState
+LaneChangeState = log.LateralPlan.LaneChangeState
 
 
 
