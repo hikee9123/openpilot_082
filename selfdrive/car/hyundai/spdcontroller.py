@@ -218,13 +218,14 @@ class SpdController():
 
     @staticmethod
     def get_lead( sm ):
-        lead_msg = sm['modelV2'].leads[0]
-        if lead_msg.prob > 0.5:
-            dRel = float(lead_msg.xyva[0] - RADAR_TO_CAMERA)
-            vRel = float(lead_msg.xyva[2])
-        else:
-            dRel = 150
-            vRel = 0
+        dRel = 150
+        vRel = 0
+
+        if len(sm['modelV2'].leads) > 1:
+            lead_msg = sm['modelV2'].leads[0]
+            if lead_msg.prob > 0.5:
+                dRel = float(lead_msg.xyva[0] - RADAR_TO_CAMERA)
+                vRel = float(lead_msg.xyva[2])
 
 
         return dRel, vRel
