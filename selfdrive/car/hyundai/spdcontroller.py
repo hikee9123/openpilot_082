@@ -137,29 +137,30 @@ class SpdController():
 
     def calc_va(self, sm, v_ego):
         md = sm['modelV2']
-        self.lll_prob = md.laneLineProbs[1]
-        self.rll_prob = md.laneLineProbs[2]
+        if len(md.laneLineProbs) > 1:
+            self.lll_prob = md.laneLineProbs[1]
+            self.rll_prob = md.laneLineProbs[2]
 
-        model_speedl = calc_laneProb( self.lll_prob )
-        model_speedr = calc_laneProb( self.rll_prob )
+            model_speedl = calc_laneProb( self.lll_prob )
+            model_speedr = calc_laneProb( self.rll_prob )
 
-        model_speed = (model_speedl + model_speedr) * 0.5
+            model_speed = (model_speedl + model_speedr) * 0.5
 
 
-        #model_speed = self.movAvg.get_min(model_speed, 10)
-        delta_model = model_speed - self.old_model_speed
-        if self.old_model_init < 10:
-            self.old_model_init += 1
-            self.old_model_speed = model_speed
-        elif self.old_model_speed == model_speed:
-            pass
-        elif delta_model < -1:
-            self.old_model_speed -= 1  #model_speed
-        elif delta_model > 0:
-            self.old_model_speed += 0.1
+            #model_speed = self.movAvg.get_min(model_speed, 10)
+            delta_model = model_speed - self.old_model_speed
+            if self.old_model_init < 10:
+                self.old_model_init += 1
+                self.old_model_speed = model_speed
+            elif self.old_model_speed == model_speed:
+                pass
+            elif delta_model < -1:
+                self.old_model_speed -= 1  #model_speed
+            elif delta_model > 0:
+                self.old_model_speed += 0.1
 
-        else:
-            self.old_model_speed = model_speed
+            else:
+                self.old_model_speed = model_speed
 
 
 
@@ -221,7 +222,7 @@ class SpdController():
         dRel = 150
         vRel = 0
 
-        if len(sm['modelV2'].leads) > 1:
+        if len(sm['modelV2'].leads) > 0:
             lead_msg = sm['modelV2'].leads[0]
             if lead_msg.prob > 0.5:
                 dRel = float(lead_msg.xyva[0] - RADAR_TO_CAMERA)
