@@ -112,7 +112,7 @@ class SpdController():
 
     def calc_laneProb(self, prob, v_ego):
         #if len(prob):
-        path = prob  # list(prob)
+        path = list(prob)
 
         # TODO: compute max speed without using a list of points and without numpy
         y_p = 3 * path[0] * self.path_x**2 + \
@@ -137,9 +137,9 @@ class SpdController():
 
     def calc_va(self, sm, v_ego):
         md = sm['modelV2']
-        if len(md.laneLineProbs) > 1:
-            self.lll_prob = md.laneLineProbs[1]
-            self.rll_prob = md.laneLineProbs[2]
+        if len(md.laneLines) > 1:
+            self.lll_prob = md.laneLines[1].x
+            self.rll_prob = md.laneLines[2].x
 
             model_speedl = self.calc_laneProb( self.lll_prob,v_ego )
             model_speedr = self.calc_laneProb( self.rll_prob,v_ego )
