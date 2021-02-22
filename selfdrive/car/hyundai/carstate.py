@@ -187,8 +187,8 @@ class CarState(CarStateBase):
     self.clu11 = copy.copy(cp.vl["CLU11"])
     self.mdps12 = copy.copy(cp.vl["MDPS12"])
     self.lfahda_mfc = copy.copy(cp.vl["LFAHDA_MFC"])
-    self.park_brake = cp.vl["TCS13"]['PBRAKE_ACT'] == 1
-    #self.park_brake = cp.vl["CGW1"]['CF_Gway_ParkBrakeSw']
+    #self.park_brake = cp.vl["TCS13"]['PBRAKE_ACT'] == 1
+    self.park_brake = cp.vl["CGW1"]['CF_Gway_ParkBrakeSw']
     self.steer_state = cp.vl["MDPS12"]['CF_Mdps_ToiActive']  # 0 NOT ACTIVE, 1 ACTIVE
     self.lead_distance = cp.vl["SCC11"]['ACC_ObjDist']
     self.brake_hold = cp.vl["TCS15"]['AVH_LAMP'] == 2 # 0 OFF, 1 ERROR, 2 ACTIVE, 3 READY
