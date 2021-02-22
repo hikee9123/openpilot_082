@@ -141,8 +141,8 @@ class SpdController():
             self.lll_prob = md.laneLineProbs[1]
             self.rll_prob = md.laneLineProbs[2]
 
-            model_speedl = self.calc_laneProb( self.lll_prob )
-            model_speedr = self.calc_laneProb( self.rll_prob )
+            model_speedl = self.calc_laneProb( self.lll_prob,v_ego )
+            model_speedr = self.calc_laneProb( self.rll_prob,v_ego )
 
             model_speed = (model_speedl + model_speedr) * 0.5
 
