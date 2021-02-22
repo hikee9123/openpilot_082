@@ -11,7 +11,7 @@ class CarInterface(CarInterfaceBase):
     return float(accel) / 3.0
 
   @staticmethod
-  def get_params(candidate, fingerprint=None, car_fw=None):
+  def get_params(candidate, fingerprint=None, has_relay=False, car_fw=None):
     if fingerprint is None:
       fingerprint = gen_empty_fingerprint()
 

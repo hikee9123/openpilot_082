@@ -379,8 +379,8 @@ def thermald_thread():
     startup_conditions["device_temp_good"] = thermal_status < ThermalStatus.danger
     set_offroad_alert_if_changed("Offroad_TemperatureTooHigh", (not startup_conditions["device_temp_good"]))
 
-    startup_conditions["hardware_supported"] = pandaState is not None and pandaState.pandaState.pandaType not in [log.PandaState.PandaType.whitePanda,
-                                                                                                   log.PandaState.PandaType.greyPanda]
+    startup_conditions["hardware_supported"] = True #pandaState is not None and pandaState.pandaState.pandaType not in [log.PandaState.PandaType.whitePanda,
+                                                    #                                               log.PandaState.PandaType.greyPanda]
     set_offroad_alert_if_changed("Offroad_HardwareUnsupported", pandaState is not None and not startup_conditions["hardware_supported"])
 
     # Handle offroad/onroad transition
