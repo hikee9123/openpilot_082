@@ -39,7 +39,7 @@ class CarInterface(CarInterfaceBase):
     ret.radarOffCan = True
 
     # Most Hyundai car ports are community features for now
-    ret.communityFeature = candidate not in [CAR.GRANDEUR_HEV_19,CAR.SONATA, CAR.PALISADE]
+    ret.communityFeature = candidate not in [CAR.SONATA, CAR.PALISADE]
 
     ret.steerActuatorDelay = 0.1  # Default delay
     ret.steerRateCost = 0.5
@@ -339,7 +339,7 @@ class CarInterface(CarInterfaceBase):
       ret.safetyModel = car.CarParams.SafetyModel.hyundaiCommunity
     # these cars require a special panda safety mode due to missing counters and checksums in the messages
     elif candidate in [CAR.HYUNDAI_GENESIS, CAR.IONIQ_EV_2020, CAR.IONIQ_EV_LTD, CAR.IONIQ, CAR.KONA_EV, CAR.KIA_SORENTO, CAR.SONATA_LF,
-                     CAR.KIA_NIRO_EV, CAR.KIA_OPTIMA, CAR.VELOSTER, CAR.KIA_STINGER, CAR.GENESIS_G70, CAR.GENESIS_G80]:
+                     CAR.KIA_NIRO_EV, CAR.KIA_OPTIMA, CAR.VELOSTER, CAR.KIA_STINGER, CAR.GENESIS_G70, CAR.GENESIS_G80, CAR.GRANDEUR_HEV_19]:
       ret.safetyModel = car.CarParams.SafetyModel.hyundaiLegacy
 
 
