@@ -147,7 +147,7 @@ class CarState(CarStateBase):
 
     if self.CP.carFingerprint in EV_HYBRID:
       ret.gas = cp.vl["E_EMS11"]['Accel_Pedal_Pos'] / 256.
-      ret.gasPressed = ret.gas > 5
+      ret.gasPressed = ret.gas > 0
     else:
       ret.gas = cp.vl["EMS12"]['PV_AV_CAN'] / 100
       ret.gasPressed = bool(cp.vl["EMS16"]["CF_Ems_AclAct"])
@@ -430,15 +430,15 @@ class CarState(CarStateBase):
       ("CF_Clu_AliveCnt1", "CLU11", 0),
 
       ("ACCEnable", "TCS13", 0),
-      ("ACC_REQ", "TCS13", 0),      
+      ("ACC_REQ", "TCS13", 0),           # append  082
       ("BrakeLight", "TCS13", 0),
       ("DriverBraking", "TCS13", 0),
-      ("StandStill", "TCS13", 0),
-      ("PBRAKE_ACT", "TCS13", 0),      
+      ("StandStill", "TCS13", 0),        # append  082
+      ("PBRAKE_ACT", "TCS13", 0),        # append  082
       ("DriverOverride", "TCS13", 0),
 
       ("ESC_Off_Step", "TCS15", 0),
-      ("AVH_LAMP", "TCS15", 0),
+      ("AVH_LAMP", "TCS15", 0),          # append  082
 
       ("CF_Lvr_GearInf", "LVR11", 0),        # Transmission Gear (0 = N or P, 1-8 = Fwd, 14 = Rev)
 

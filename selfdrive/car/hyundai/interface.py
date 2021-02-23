@@ -334,10 +334,15 @@ class CarInterface(CarInterfaceBase):
     # atom  END
 
 
+    # set safety_hyundai_community only for non-SCC, MDPS harrness or SCC harrness cars or cars that have unknown issue
+    if ret.radarOffCan or ret.openpilotLongitudinalControl or Params().get('CommunityFeaturesToggle') == b'1':
+      ret.safetyModel = car.CarParams.SafetyModel.hyundaiCommunity
     # these cars require a special panda safety mode due to missing counters and checksums in the messages
-    if candidate in [CAR.HYUNDAI_GENESIS, CAR.IONIQ_EV_2020, CAR.IONIQ_EV_LTD, CAR.IONIQ, CAR.KONA_EV, CAR.KIA_SORENTO, CAR.SONATA_LF,
+    elif candidate in [CAR.HYUNDAI_GENESIS, CAR.IONIQ_EV_2020, CAR.IONIQ_EV_LTD, CAR.IONIQ, CAR.KONA_EV, CAR.KIA_SORENTO, CAR.SONATA_LF,
                      CAR.KIA_NIRO_EV, CAR.KIA_OPTIMA, CAR.VELOSTER, CAR.KIA_STINGER, CAR.GENESIS_G70, CAR.GENESIS_G80]:
       ret.safetyModel = car.CarParams.SafetyModel.hyundaiLegacy
+
+
 
     ret.centerToFront = ret.wheelbase * 0.4
 
