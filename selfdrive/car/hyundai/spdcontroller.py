@@ -140,6 +140,7 @@ class SpdController():
 
     def calc_va(self, sm, v_ego):
         md = sm['modelV2']
+        print('{}'.format( md ) )
         if len(md.position) > 1:
             self.lll_prob = md.position.x
             #self.rll_prob = md.laneLines[2].x
