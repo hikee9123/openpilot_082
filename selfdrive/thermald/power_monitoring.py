@@ -194,8 +194,8 @@ class PowerMonitoring:
     if self.ts_last_charging_ctrl is None or (ts - self.ts_last_charging_ctrl) >= 300.:
       battery_changing = HARDWARE.get_battery_charging()
       if self.ts_last_charging_ctrl:
-        if msg.thermal.batteryPercent >= to_discharge and battery_changing:
+        if msg.deviceState.batteryPercent >= to_discharge and battery_changing:
           HARDWARE.set_battery_charging(False)
-        elif msg.thermal.batteryPercent <= to_charge and not battery_changing:
+        elif msg.deviceState.batteryPercent <= to_charge and not battery_changing:
           HARDWARE.set_battery_charging(True)
       self.ts_last_charging_ctrl = ts

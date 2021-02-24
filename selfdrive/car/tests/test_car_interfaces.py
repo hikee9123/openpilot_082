@@ -14,8 +14,7 @@ class TestSpdCtrl:
   def __init__(self):  
     self.SC = SpdctrlSlow()
 
-    if self.sm is None:
-      self.sm = messaging.SubMaster(['modelV2'])
+    self.sm = messaging.SubMaster(['modelV2'])
 
 
   def test(self):
