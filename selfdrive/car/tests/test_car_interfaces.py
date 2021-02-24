@@ -18,8 +18,8 @@ class TestSpdCtrl:
 
 
   def test(self):
-      sm.update()
-      model_speed = self.SC.calc_va(  sm, 5  )
+      self.sm.update()
+      model_speed = self.SC.calc_va(  self.sm, 5  )
       print( "model_speed = {}\n", model_speed)
 
 
