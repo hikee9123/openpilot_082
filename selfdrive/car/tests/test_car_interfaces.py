@@ -84,5 +84,5 @@ class TestCarInterfaces(unittest.TestCase):
 if __name__ == "__main__":
   #unittest.main()
 
-  spdCtrl = TestSpdCtrl   
+  spdCtrl = TestSpdCtrl()
   spdCtrl.test()
