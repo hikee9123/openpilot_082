@@ -142,22 +142,17 @@ class SpdController():
             model_speed = MAX_SPEED
           
 
-            return  model_speed
+        return  model_speed
 
 
     def calc_va(self, sm, v_ego):
         md = sm['modelV2']
         print('{}'.format( md ) )
         if len(md.position.x) > 1:
-            self.lll_prob = md.position.x
-            #self.rll_prob = md.laneLines[2].x
+            self.prob = md.position.x
 
-            model_speedl = self.calc_laneProb( self.lll_prob, v_ego )
-            #model_speedr = self.calc_laneProb( self.rll_prob,v_ego )
-
-            model_speed = model_speedl
-
-            #model_speed = self.movAvg.get_min(model_speed, 10)
+            model_speed = self.calc_laneProb( self.prob, v_ego )
+    
             delta_model = model_speed - self.old_model_speed
             if self.old_model_init < 10:
                 self.old_model_init += 1
