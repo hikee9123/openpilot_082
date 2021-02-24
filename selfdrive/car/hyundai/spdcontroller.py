@@ -150,6 +150,7 @@ class SpdController():
         print('{}'.format( md ) )
         if len(md.position.x) > 1:
             self.prob = md.position.x
+            #self.prob = md.curv
 
             model_speed = self.calc_laneProb( self.prob, v_ego )
     
