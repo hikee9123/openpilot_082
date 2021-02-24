@@ -146,9 +146,9 @@ class SpdController():
 
     def calc_va(self, sm, v_ego):
         md = sm['modelV2']
-        print('{}'.format( md.laneLines[1].x ) )
+        print('{}'.format( md.laneLines[1].t ) )
         if len(md.position.x) > 1:
-            self.prob = md.laneLines[1].x
+            self.prob = md.laneLines[1].t
             #self.prob = md.curv
 
             model_speed = self.calc_laneProb( self.prob, v_ego )
