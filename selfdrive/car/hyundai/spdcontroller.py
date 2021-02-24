@@ -131,7 +131,7 @@ class SpdController():
             # Don't slow down below 20mph
             model_speed = max(20.0 * CV.KPH_TO_MS, model_speed)
 
-            print( 'model_speed = {}  '.format( model_speed) )
+            #print( 'model_speed = {}  '.format( model_speed) )
 
             model_speed = model_speed * CV.MS_TO_KPH
             if model_speed > MAX_SPEED:
@@ -147,8 +147,8 @@ class SpdController():
     def calc_va(self, sm, v_ego):
         md = sm['modelV2']
         #print('{}'.format( md.position.x ) )
-        if len(md.position.t) > 1:
-            self.prob = md.position.t
+        if len(md.position.y) > 1:
+            self.prob = md.position.y
             #self.prob = md.curv
 
             model_speed = self.calc_laneProb( self.prob, v_ego )
