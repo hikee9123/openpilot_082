@@ -136,7 +136,6 @@ class SpdController():
             model_speed = model_speed * CV.MS_TO_KPH
             if model_speed > MAX_SPEED:
                 model_speed = MAX_SPEED
-
         else:
             model_speed = MAX_SPEED
           
