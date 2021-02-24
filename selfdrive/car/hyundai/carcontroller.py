@@ -157,7 +157,7 @@ class CarController():
       self.steer_torque_ratio = 1
       return param, dst_steer
 
-    if self.CP.atomTuning:
+    if self.CP.lateralsRatom.learnerParams != 1:
       nMAX, nUP, nDN = self.atom_tune( v_ego_kph, self.model_speed )
       param.STEER_MAX = min( param.STEER_MAX, nMAX)
       param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, nUP)
