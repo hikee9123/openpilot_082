@@ -302,7 +302,7 @@ class CarController():
 
     # 20 Hz LFA MFA message
     if frame % 5 == 0 and self.car_fingerprint in FEATURES["use_lfa_mfa"]:
-      can_sends.append(create_lfahda_mfc(self.packer, frame, enabled, CS.Navi_SCC_Camera_Act, CS.lfahda_mfc))
+      can_sends.append(create_lfahda_mfc(self.packer, enabled, CS))
 
    # counter inc
     self.lkas11_cnt += 1
