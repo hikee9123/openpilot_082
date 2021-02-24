@@ -157,11 +157,11 @@ class CarController():
       self.steer_torque_ratio = 1
       return param, dst_steer
 
-
-    nMAX, nUP, nDN = self.atom_tune( v_ego_kph, self.model_speed )
-    param.STEER_MAX = min( param.STEER_MAX, nMAX)
-    param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, nUP)
-    param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, nDN )
+    if self.CP.atomTuning:
+      nMAX, nUP, nDN = self.atom_tune( v_ego_kph, self.model_speed )
+      param.STEER_MAX = min( param.STEER_MAX, nMAX)
+      param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, nUP)
+      param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, nDN )
 
     sec_mval = 10.0  # 오파 => 운전자.  (sec)
     sec_pval = 3  #  운전자 => 오파  (sec)
