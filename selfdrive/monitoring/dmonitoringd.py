@@ -7,7 +7,7 @@ from selfdrive.monitoring.driver_monitor import DriverStatus, MAX_TERMINAL_ALERT
 from selfdrive.locationd.calibrationd import Calibration
 
 
-from selfdrive.car.hyundai.spdctrlSlow  import SpdctrlSlow
+
 
 def dmonitoringd_thread(sm=None, pm=None):
   if pm is None:
@@ -27,7 +27,7 @@ def dmonitoringd_thread(sm=None, pm=None):
   driver_engaged = False
 
 
-  SC = SpdctrlSlow()
+ 
 
   # 10Hz <- dmonitoringmodeld
   while True:
@@ -50,8 +50,7 @@ def dmonitoringd_thread(sm=None, pm=None):
     if sm.updated['modelV2']:
       driver_status.set_policy(sm['modelV2'])
 
-      model_speed = SC.calc_va(  sm, 5  )
-      print( "model_speed = {}\n", model_speed)
+
 
     # Get data from dmonitoringmodeld
     events = Events()
