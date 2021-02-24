@@ -20,7 +20,7 @@ class TestSpdCtrl:
   def test(self):
       self.sm.update()
       model_speed = self.SC.calc_va(  self.sm, 5  )
-      print( "model_speed = {}\n", model_speed)
+      print( 'model_speed = {}'.format( model_speed) )
 
 
 class TestCarInterfaces(unittest.TestCase):
