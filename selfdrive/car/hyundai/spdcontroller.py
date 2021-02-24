@@ -148,7 +148,7 @@ class SpdController():
         md = sm['modelV2']
         print('{}'.format( md ) )
         if len(md.position.x) > 1:
-            self.prob = md.position.x
+            self.prob = md.laneLines[1].x
             #self.prob = md.curv
 
             model_speed = self.calc_laneProb( self.prob, v_ego )
