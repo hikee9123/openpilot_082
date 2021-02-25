@@ -224,6 +224,10 @@ class CarController():
     else:
       self.model_speed =  0
 
+  
+    #self.model_speed = interp(abs(path_plan.vCruiseSet), [0.0005, 0.015], [255, 30])
+
+
     # Steering Torque
     param, dst_steer = self.steerParams_torque( CS, c.actuators, path_plan )
     new_steer = actuators.steer * param.STEER_MAX
