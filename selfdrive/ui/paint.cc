@@ -721,10 +721,9 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
   int bb_uom_dx =  (int)(bb_w /2 - uom_fontSize*2.5) ;
 
 
-  auto &lead_data = s->scene.lead_data[0];
 
-  float lead_d_rel1 = lead_data.getDRel();
-  float lead_v_rel1 = lead_data.getVRel();
+  float lead_d_rel1 = scene->lead_data[0].getDRel();
+  float lead_v_rel1 = scene->lead_data[0].getVRel();
 
   float angleSteers = scene->car_state.getSteeringAngleDeg();
   float angleSteersDes = scene->controls_state.getSteeringAngleDesiredDeg();
@@ -734,7 +733,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
     char val_str[16];
     char uom_str[6];
     NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
-    //if (lead_d_rel1) {
+    if (scene->lead_data[0].getStatus()) {
       //show RED if less than 5 meters
       //show orange if less than 15 meters
       if((int)(lead_d_rel1) < 15) {
@@ -745,9 +744,9 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
       }
       // lead car relative distance is always in meters
       snprintf(val_str, sizeof(val_str), "%d", (int)lead_d_rel1);
-    //} else {
-    //   snprintf(val_str, sizeof(val_str), "-");
-    //}
+    } else {
+       snprintf(val_str, sizeof(val_str), "-");
+    }
     snprintf(uom_str, sizeof(uom_str), "m   ");
     bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "REL DIST",
         bb_rx, bb_ry, bb_uom_dx,
@@ -762,7 +761,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
     char val_str[16];
     char uom_str[6];
     NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
-    //if (lead_v_rel1) {
+    if (scene->lead_data[0].getStatus()) {
       //show Orange if negative speed (approaching)
       //show Orange if negative speed faster than 5mph (approaching fast)
       if((int)(lead_v_rel1) < 0) {
@@ -777,9 +776,9 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
       } else {
          snprintf(val_str, sizeof(val_str), "%d", (int)(lead_v_rel1 * 2.2374144 + 0.5));
       }
-    //} else {
-    //   snprintf(val_str, sizeof(val_str), "-");
-    //}
+    } else {
+       snprintf(val_str, sizeof(val_str), "-");
+    }
     if (s->is_metric) {
       snprintf(uom_str, sizeof(uom_str), "km/h");;
     } else {

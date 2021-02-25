@@ -166,8 +166,6 @@ class SpdController():
             else:
                 self.old_model_speed = model_speed
 
-
-
         return self.old_model_speed
 
 
