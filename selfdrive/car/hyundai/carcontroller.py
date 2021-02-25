@@ -225,7 +225,7 @@ class CarController():
       self.model_speed =  0
 
   
-    #self.model_speed = interp(abs(path_plan.vCruiseSet), [0.0005, 0.015], [255, 30])
+    self.model_speed = interp(abs(path_plan.vCruiseSet), [0.0005, 0.015], [255, 30])
 
 
     # Steering Torque
