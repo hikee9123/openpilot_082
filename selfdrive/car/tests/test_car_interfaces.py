@@ -85,12 +85,3 @@ if __name__ == "__main__":
 
   spdCtrl = TestSpdCtrl()
   spdCtrl.test()
-  spdCtrl.test()
-  spdCtrl.test()
-  spdCtrl.test()
-  spdCtrl.test()
-  spdCtrl.test()
-  spdCtrl.test()
-  spdCtrl.test()
-  spdCtrl.test()
-  spdCtrl.test()
