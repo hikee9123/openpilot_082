@@ -119,7 +119,7 @@ class SpdController():
 
             # TODO: compute max speed without using a list of points and without numpy
             y_p = 3 * path[0] * self.path_x**2 + \
-                2 * path[15] * self.path_x + path[30]
+                2 * path[15] * self.path_x + path[32]
             y_pp = 6 * path[0] * self.path_x + 2 * path[15]
             curv = y_pp / (1. + y_p**2)**1.5
 
@@ -145,7 +145,7 @@ class SpdController():
 
     def calc_va(self, sm, v_ego):
         md = sm['modelV2']
-        print('{}'.format( md ) )
+        #print('{}'.format( md ) )
         if len(md.laneLines[1].y) > 1:
             self.prob = md.laneLines[1].y
             #self.prob = md.curv
