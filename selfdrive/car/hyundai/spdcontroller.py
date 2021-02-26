@@ -130,7 +130,7 @@ class SpdController():
             model_speed = np.min(v_curvature)
             # Don't slow down below 20mph
            # model_speed = max(30.0 * CV.KPH_TO_MS, model_speed)
-            print( 'v_curvature = {}'.format( v_curvature) )
+           # print( 'v_curvature = {}'.format( v_curvature) )
             print( 'model_speed = {}  '.format( model_speed) )
 
             model_speed = model_speed * CV.MS_TO_KPH
