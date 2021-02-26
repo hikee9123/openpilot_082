@@ -19,7 +19,7 @@ class TestSpdCtrl:
 
   def test(self):
       self.sm.update()
-      model_speed = self.SC.calc_va(  self.sm, 20  )
+      model_speed = self.SC.calc_va(  self.sm, 30  )
       print( 'model_speed = {}'.format( model_speed) )
 
 
