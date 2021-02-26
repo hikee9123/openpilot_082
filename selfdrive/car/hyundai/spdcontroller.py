@@ -123,7 +123,7 @@ class SpdController():
             y_pp = 6 * path[0] * self.path_x + 2 * path[15]
             curv = y_pp / (1. + y_p**2)**1.5
 
-            #print( 'curv = {}'.format( curv) )
+            print( 'curv = {}'.format( curv) )
 
             a_y_max = 2.975 - v_ego * 0.0375  # ~1.85 @ 75mph, ~2.6 @ 25mph
             v_curvature = np.sqrt(a_y_max / np.clip(np.abs(curv), 1e-4, None))
