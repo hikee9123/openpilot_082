@@ -114,7 +114,7 @@ class SpdController():
         self.a_cruise = 0
 
     def calc_laneProb(self, prob, v_ego):
-        if len(prob):
+        if len(prob) > 30:
             path = list(prob)
 
             # TODO: compute max speed without using a list of points and without numpy
