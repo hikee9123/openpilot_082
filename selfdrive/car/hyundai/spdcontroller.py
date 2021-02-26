@@ -123,7 +123,7 @@ class SpdController():
             y_pp = 6 * path[0] * self.path_x + 2 * path[1]
             curv = y_pp / (1. + y_p**2)**1.5
 
-            #print( 'curv = {}'.format( curv) )
+            print( 'path = {}'.format( path) )
 
             a_y_max = 2.975 - v_ego * 0.0375  # ~1.85 @ 75mph, ~2.6 @ 25mph
             v_curvature = np.sqrt(a_y_max / np.clip(np.abs(curv), 1e-4, None))
@@ -131,7 +131,7 @@ class SpdController():
             # Don't slow down below 20mph
             model_speed = max(30.0 * CV.KPH_TO_MS, model_speed)
 
-            #print( 'model_speed = {}  '.format( model_speed) )
+            print( 'model_speed = {}  '.format( model_speed) )
 
             model_speed = model_speed * CV.MS_TO_KPH
             if model_speed > MAX_SPEED:
