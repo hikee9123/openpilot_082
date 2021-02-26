@@ -119,8 +119,8 @@ class SpdController():
 
             # TODO: compute max speed without using a list of points and without numpy
             y_p = 3 * path[0] * self.path_x**2 + \
-                2 * path[1] * self.path_x + path[2]
-            y_pp = 6 * path[0] * self.path_x + 2 * path[1]
+                2 * path[10] * self.path_x + path[20]
+            y_pp = 6 * path[0] * self.path_x + 2 * path[10]
             curv = y_pp / (1. + y_p**2)**1.5
 
             print( 'path = {}'.format( path) )
