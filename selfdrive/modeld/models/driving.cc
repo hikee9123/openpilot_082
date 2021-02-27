@@ -83,8 +83,8 @@ void model_init(ModelState* s, cl_device_id device_id, cl_context context) {
   // Build Vandermonde matrix
   for(int i = 0; i < TRAJECTORY_SIZE; i++) {
     for(int j = 0; j < POLYFIT_DEGREE - 1; j++) {
-      X_IDXS[i] = (TRAJECTORY_DISTANCE/1024.0) * (pow(i,2));
-      T_IDXS[i] = (TRAJECTORY_TIME/1024.0) * (pow(i,2));
+     // X_IDXS[i] = (TRAJECTORY_DISTANCE/1024.0) * (pow(i,2));
+     // T_IDXS[i] = (TRAJECTORY_TIME/1024.0) * (pow(i,2));
       vander(i, j) = pow(X_IDXS[i], POLYFIT_DEGREE-j-1);
     }
   }
