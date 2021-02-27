@@ -386,7 +386,7 @@ void model_publish1(PubMaster &pm, uint32_t vipc_frame_id, uint32_t frame_id, fl
 
     const uint32_t frame_age = (frame_id > vipc_frame_id) ? (frame_id - vipc_frame_id) : 0;
     MessageBuilder msg;
-    auto framed = framed = msg.initEvent().initModel();
+    auto framed = msg.initEvent().initModel();
     framed.setFrameId(vipc_frame_id);
     framed.setFrameAge(frame_age);
     framed.setFrameDropPerc(frame_drop * 100);
