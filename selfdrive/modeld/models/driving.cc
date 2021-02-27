@@ -181,6 +181,24 @@ void fill_lead(cereal::ModelData::LeadData::Builder lead, const float *lead_data
   lead.setRelAStd(exp(data[LEAD_MHP_VALS + 3]));
 }
 
+template <class MetaBuilder>
+void fill_meta(MetaBuilder meta, const float *meta_data) {
+  float desire_state_softmax[DESIRE_LEN];
+  float desire_pred_softmax[4*DESIRE_LEN];
+  softmax(&meta_data[0], desire_state_softmax, DESIRE_LEN);
+  for (int i=0; i<4; i++) {
+    softmax(&meta_data[DESIRE_LEN + OTHER_META_SIZE + i*DESIRE_LEN],
+            &desire_pred_softmax[i*DESIRE_LEN], DESIRE_LEN);
+  }
+  meta.setDesireState(desire_state_softmax);
+  meta.setEngagedProb(sigmoid(meta_data[DESIRE_LEN]));
+  meta.setGasDisengageProb(sigmoid(meta_data[DESIRE_LEN + 1]));
+  meta.setBrakeDisengageProb(sigmoid(meta_data[DESIRE_LEN + 2]));
+  meta.setSteerOverrideProb(sigmoid(meta_data[DESIRE_LEN + 3]));
+  meta.setDesirePrediction(desire_pred_softmax);
+}
+
+
 void fill_meta(cereal::ModelDataV2::MetaData::Builder meta, const float *meta_data) {
   float desire_state_softmax[DESIRE_LEN];
   float desire_pred_softmax[4*DESIRE_LEN];
