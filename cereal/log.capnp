@@ -650,7 +650,7 @@ struct ModelDataV2 {
   meta @12 :MetaData;
 
 
-  path @17 :PathData;
+  path @18 :PathData;
 
   struct PathData {
     points @0 :List(Float32);
