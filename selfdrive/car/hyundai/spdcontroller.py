@@ -114,13 +114,13 @@ class SpdController():
         self.a_cruise = 0
 
     def calc_laneProb(self, prob, v_ego):
-        if len(prob) >= 32:
+        if len(prob) > 1:
             path = list(prob)
 
             # TODO: compute max speed without using a list of points and without numpy
             y_p = 3 * path[0] * self.path_x**2 + \
-                2 * path[15] * self.path_x + path[30]
-            y_pp = 6 * path[0] * self.path_x + 2 * path[15]
+                2 * path[1] * self.path_x + path[2]
+            y_pp = 6 * path[0] * self.path_x + 2 * path[1]
             curv = y_pp / (1. + y_p**2)**1.5
 
             #print( 'curv = {}'.format( curv) )
@@ -129,7 +129,7 @@ class SpdController():
             v_curvature = np.sqrt(a_y_max / np.clip(np.abs(curv), 1e-4, None))
             model_speed = np.min(v_curvature)
             # Don't slow down below 20mph
-           # model_speed = max(30.0 * CV.KPH_TO_MS, model_speed)
+            model_speed = max(30.0 * CV.KPH_TO_MS, model_speed)
            # print( 'v_curvature = {}'.format( v_curvature) )
             #print( 'model_speed = {}  '.format( model_speed) )
 
@@ -144,11 +144,10 @@ class SpdController():
 
 
     def calc_va(self, sm, v_ego):
-        md = sm['modelV2']
-        #print('{}'.format( md ) )
-        if len(md.laneLines) > 1:
-            self.prob = md.laneLines[1].y
-            #self.prob = md.curv
+        md = sm['model']
+        print('{}'.format( md ) )
+        if len(md.path.poly):
+            self.prob = list(md.path.poly)
 
             model_speed = self.calc_laneProb( self.prob, v_ego )
     
