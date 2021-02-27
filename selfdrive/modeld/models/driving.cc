@@ -384,8 +384,7 @@ void model_publish1(PubMaster &pm, uint32_t vipc_frame_id, uint32_t frame_id, fl
                    float model_execution_time, kj::ArrayPtr<const float> raw_pred) 
 {
 
-  const uint32_t frame_age = (frame_id > vipc_frame_id) ? (frame_id - vipc_frame_id) : 0;
-
+    const uint32_t frame_age = (frame_id > vipc_frame_id) ? (frame_id - vipc_frame_id) : 0;
     MessageBuilder msg;
     auto framed = framed = msg.initEvent().initModel();
     framed.setFrameId(vipc_frame_id);
