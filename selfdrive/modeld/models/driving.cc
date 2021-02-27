@@ -164,6 +164,21 @@ void fill_lead_v2(cereal::ModelDataV2::LeadDataV2::Builder lead, const float *le
   lead.setXyvaStd(xyva_stds_arr);
 }
 
+
+void fill_lead(cereal::ModelData::LeadData::Builder lead, const float *lead_data, const float *prob, int t_offset) {
+  const float *data = get_lead_data(lead_data, t_offset);
+  lead.setProb(sigmoid(prob[t_offset]));
+  lead.setDist(data[0]);
+  lead.setStd(exp(data[LEAD_MHP_VALS]));
+  // TODO make all msgs same format
+  lead.setRelY(-data[1]);
+  lead.setRelYStd(exp(data[LEAD_MHP_VALS + 1]));
+  lead.setRelVel(data[2]);
+  lead.setRelVelStd(exp(data[LEAD_MHP_VALS + 2]));
+  lead.setRelA(data[3]);
+  lead.setRelAStd(exp(data[LEAD_MHP_VALS + 3]));
+}
+
 void fill_meta(cereal::ModelDataV2::MetaData::Builder meta, const float *meta_data) {
   float desire_state_softmax[DESIRE_LEN];
   float desire_pred_softmax[4*DESIRE_LEN];
