@@ -1,4 +1,7 @@
 #pragma once
+
+constexpr int MODEL_PATH_DISTANCE = 192;
+
 const int  TRAJECTORY_SIZE = 33;
 const float MIN_DRAW_DISTANCE = 10.0;
 const float MAX_DRAW_DISTANCE = 100.0;

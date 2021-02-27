@@ -29,6 +29,7 @@ constexpr int LEAD_MHP_SELECTION = 3;
 constexpr int LEAD_MHP_GROUP_SIZE = (2*LEAD_MHP_VALS + LEAD_MHP_SELECTION);
 
 constexpr int POSE_SIZE = 12;
+constexpr int MIN_VALID_LEN = 10;
 
 constexpr int PLAN_IDX = 0;
 constexpr int LL_IDX = PLAN_IDX + PLAN_MHP_N*PLAN_MHP_GROUP_SIZE;
