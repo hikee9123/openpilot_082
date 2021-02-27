@@ -263,6 +263,57 @@ void fill_model(cereal::ModelDataV2::Builder &framed, const ModelDataRaw &net_ou
 }
 
 
+
+void poly_fit(float *in_pts, float *in_stds, float *out, int valid_len) {
+  // References to inputs
+  Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, 1> > pts(in_pts, valid_len);
+  Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, 1> > std(in_stds, valid_len);
+  Eigen::Map<Eigen::Matrix<float, POLYFIT_DEGREE - 1, 1> > p(out, POLYFIT_DEGREE - 1);
+
+  float y0 = pts[0];
+  pts = pts.array() - y0;
+
+  // Build Least Squares equations
+  Eigen::Matrix<float, Eigen::Dynamic, POLYFIT_DEGREE - 1> lhs = vander.topRows(valid_len).array().colwise() / std.array();
+  Eigen::Matrix<float, Eigen::Dynamic, 1> rhs = pts.array() / std.array();
+
+  // Improve numerical stability
+  Eigen::Matrix<float, POLYFIT_DEGREE - 1, 1> scale = 1. / (lhs.array()*lhs.array()).sqrt().colwise().sum();
+  lhs = lhs * scale.asDiagonal();
+
+  // Solve inplace
+  p = lhs.colPivHouseholderQr().solve(rhs);
+
+  // Apply scale to output
+  p = p.transpose() * scale.asDiagonal();
+  out[3] = y0;
+}
+
+void fill_path(cereal::ModelData::PathData::Builder path, const float *data, const float prob,
+               float valid_len, int valid_len_idx, int ll_idx) {
+  float points[TRAJECTORY_SIZE] = {};
+  float stds[TRAJECTORY_SIZE] = {};
+  float poly[POLYFIT_DEGREE] = {};
+
+  for (int i=0; i<TRAJECTORY_SIZE; i++) {
+    // negative sign because mpc has left positive
+    if (ll_idx == 0) {
+      points[i] = -data[30 * i + 16];
+      stds[i] = exp(data[30 * (33 + i) + 16]);
+    } else {
+      points[i] = -data[2 * 33 * ll_idx + 2 * i];
+      stds[i] = exp(data[2 * 33 * (4 + ll_idx) + 2 * i]);
+    }
+  }
+  const float std = stds[0];
+  poly_fit(points, stds, poly, valid_len_idx);
+
+  path.setPoly(poly);
+  path.setProb(prob);
+  path.setStd(std);
+  path.setValidLen(valid_len);
+}
+
 void fill_model(cereal::ModelData::Builder &framed, const ModelDataRaw &net_outputs) {
   // Find the distribution that corresponds to the most probable plan
   const float *best_plan = get_plan_data(net_outputs.plan);
