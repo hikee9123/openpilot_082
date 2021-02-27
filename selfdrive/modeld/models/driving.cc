@@ -48,6 +48,8 @@ constexpr int OUTPUT_SIZE =  POSE_IDX + POSE_SIZE;
 #endif
 
 // #define DUMP_YUV
+Eigen::Matrix<float, MODEL_PATH_DISTANCE, POLYFIT_DEGREE - 1> vander;
+
 
 void model_init(ModelState* s, cl_device_id device_id, cl_context context) {
   frame_init(&s->frame, MODEL_WIDTH, MODEL_HEIGHT, device_id, context);
