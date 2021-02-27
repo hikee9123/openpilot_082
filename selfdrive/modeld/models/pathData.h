@@ -55,7 +55,7 @@ void poly_fit(float *in_pts, float *in_stds, float *out, int valid_len)
 
 
 
-void fill_path(cereal::ModelData::PathData::Builder path, const float *data, const float prob,
+void fill_path(cereal::ModelData::ModelDataV2::Builder path, const float *data, const float prob,
                float valid_len, int valid_len_idx, int ll_idx) {
   float points[TRAJECTORY_SIZE] = {};
   float stds[TRAJECTORY_SIZE] = {};
