@@ -18,6 +18,7 @@ service_list = {
   "deviceState": Service(8005, True, 2., 1),
   "can": Service(8006, True, 100.),
   "controlsState": Service(8007, True, 100., 100),
+  "model": Service(8009, True, 20., 5),
   "features": Service(8010, True, 0.),
   "pandaState": Service(8011, True, 2., 1),
   "radarState": Service(8012, True, 20., 5),
