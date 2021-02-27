@@ -147,7 +147,7 @@ class SpdController():
 
     def calc_va(self, sm, v_ego):
         md = sm['modelV2']
-        print('{}'.format( md ) )
+        #print('{}'.format( md ) )
         if len(md.path.poly):
             self.prob = list(md.path.poly)
 
