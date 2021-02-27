@@ -30,6 +30,8 @@ constexpr int LEAD_MHP_GROUP_SIZE = (2*LEAD_MHP_VALS + LEAD_MHP_SELECTION);
 
 constexpr int POSE_SIZE = 12;
 constexpr int MIN_VALID_LEN = 10;
+constexpr int TRAJECTORY_TIME = 10;
+constexpr float TRAJECTORY_DISTANCE = 192.0;
 
 constexpr int PLAN_IDX = 0;
 constexpr int LL_IDX = PLAN_IDX + PLAN_MHP_N*PLAN_MHP_GROUP_SIZE;
@@ -77,6 +79,15 @@ void model_init(ModelState* s, cl_device_id device_id, cl_context context) {
   s->traffic_convention[idx] = 1.0;
   s->m->addTrafficConvention(s->traffic_convention, TRAFFIC_CONVENTION_LEN);
 #endif
+
+  // Build Vandermonde matrix
+  for(int i = 0; i < TRAJECTORY_SIZE; i++) {
+    for(int j = 0; j < POLYFIT_DEGREE - 1; j++) {
+      X_IDXS[i] = (TRAJECTORY_DISTANCE/1024.0) * (pow(i,2));
+      T_IDXS[i] = (TRAJECTORY_TIME/1024.0) * (pow(i,2));
+      vander(i, j) = pow(X_IDXS[i], POLYFIT_DEGREE-j-1);
+    }
+  }
 
   s->q = CL_CHECK_ERR(clCreateCommandQueue(context, device_id, 0, &err));
 }
