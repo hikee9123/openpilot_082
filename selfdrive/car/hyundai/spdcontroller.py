@@ -147,7 +147,7 @@ class SpdController():
 
     def calc_va(self, sm, v_ego):
         md = sm['modelV2']
-        #print('{}'.format( md ) )
+        print('{}'.format( md ) )
         if len(md.path.poly):
             self.prob = list(md.path.poly)
 
@@ -206,7 +206,7 @@ class SpdController():
             self.curise_set_first = 1
             self.prev_VSetDis = int(CS.VSetDis)
             set_speed_kph = CS.VSetDis
-            if not CS.acc_active and self.prev_clu_CruiseSwState != CS.cruise_buttons:  # MODE ?�환.
+            if not CS.acc_active and self.prev_clu_CruiseSwState != CS.cruise_buttons:  # MODE ?�환.
                 if CS.cruise_buttons == Buttons.GAP_DIST: 
                     self.cruise_set_mode += 1
                 if self.cruise_set_mode > 4:
@@ -242,7 +242,7 @@ class SpdController():
         delta_speed = CS.VSetDis - CS.clu_Vanz
         set_speed = int(CS.VSetDis) + add_val
         
-        if add_val > 0:  # 증�?
+        if add_val > 0:  # 증�?
             if delta_speed > safety_dis:
                 time = 100
         else:
@@ -278,7 +278,7 @@ class SpdController():
             self.long_curv_timer += 1
 
 
-        # ?�행 차량 거리?��?
+        # ?�행 차량 거리?��?
         lead_wait_cmd, lead_set_speed = self.update_lead( CS,  dRel, vRel )  
 
         # 커브 감속.
@@ -309,7 +309,7 @@ class SpdController():
 
         if self.long_curv_timer < long_wait_cmd:
             pass
-        elif CS.driverOverride == 1:  # 가?�패?�에 ?�한 ?�도 ?�정.
+        elif CS.driverOverride == 1:  # 가?�패?�에 ?�한 ?�도 ?�정.
             if self.cruise_set_speed_kph > CS.clu_Vanz:
                 delta = int(CS.clu_Vanz) - int(CS.VSetDis)
                 if delta > 1:
