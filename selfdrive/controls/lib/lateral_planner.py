@@ -200,7 +200,7 @@ class LateralPlanner():
       sr = self.atom_tune( v_ego_kph, sr_value, atomTuning) 
     elif lateralsRatom.learnerParams == 3:
       sr_value = sm['controlsState'].modelSpeed
-      sr_value = self.m_avg.get_avg( sr_value, 50)
+      sr_value = self.m_avg.get_avg( sr_value, 5)
       sr = self.atom_tune( v_ego_kph, sr_value, atomTuning)
     else:
       sr = max(sm['liveParameters'].steerRatio, 0.1)
