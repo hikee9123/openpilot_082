@@ -133,7 +133,7 @@ class SpdController():
            # print( 'v_curvature = {}'.format( v_curvature) )
             #print( 'model_speed = {}  '.format( model_speed) )
 
-           # model_speed = model_speed * CV.MS_TO_KPH
+            model_speed = model_speed * CV.MS_TO_KPH
             if model_speed > MAX_SPEED:
                model_speed = MAX_SPEED
         else:
