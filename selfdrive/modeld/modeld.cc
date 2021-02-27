@@ -186,6 +186,8 @@ int main(int argc, char **argv) {
         float frame_drop_ratio = frames_dropped / (1 + frames_dropped);
 
 
+        model_publish1(pm, extra.frame_id, frame_id, frame_drop_ratio, model_buf, extra.timestamp_eof, model_execution_time,
+                      kj::ArrayPtr<const float>(model.output.data(), model.output.size()));
 
         model_publish(pm, extra.frame_id, frame_id, frame_drop_ratio, model_buf, extra.timestamp_eof, model_execution_time,
                       kj::ArrayPtr<const float>(model.output.data(), model.output.size()));
