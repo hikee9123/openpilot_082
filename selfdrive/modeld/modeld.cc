@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
   assert(err == 0);
 
   // messaging
-  PubMaster pm({"modelV2", "model", "cameraOdometry"});
+  PubMaster pm({"modelV2", "cameraOdometry"});
   SubMaster sm({"lateralPlan", "roadCameraState"});
 
   // cl init
@@ -184,10 +184,6 @@ int main(int argc, char **argv) {
         frames_dropped = (1. - frame_filter_k) * frames_dropped + frame_filter_k * (float)std::min(vipc_dropped_frames, 10U);
         if (run_count < 10) frames_dropped = 0;  // let frame drops warm up
         float frame_drop_ratio = frames_dropped / (1 + frames_dropped);
-
-
-        model_publish1(pm, extra.frame_id, frame_id, frame_drop_ratio, model_buf, extra.timestamp_eof, model_execution_time,
-                      kj::ArrayPtr<const float>(model.output.data(), model.output.size()));
 
         model_publish(pm, extra.frame_id, frame_id, frame_drop_ratio, model_buf, extra.timestamp_eof, model_execution_time,
                       kj::ArrayPtr<const float>(model.output.data(), model.output.size()));

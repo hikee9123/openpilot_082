@@ -113,14 +113,15 @@ class SpdController():
         self.v_cruise = 0
         self.a_cruise = 0
 
+
     def calc_laneProb(self, prob, v_ego):
-        if len(prob) > 1:
+        if len(prob) >= 32:
             path = list(prob)
 
             # TODO: compute max speed without using a list of points and without numpy
             y_p = 3 * path[0] * self.path_x**2 + \
-                2 * path[1] * self.path_x + path[2]
-            y_pp = 6 * path[0] * self.path_x + 2 * path[1]
+                2 * path[15] * self.path_x + path[30]
+            y_pp = 6 * path[0] * self.path_x + 2 * path[15]
             curv = y_pp / (1. + y_p**2)**1.5
 
             #print( 'curv = {}'.format( curv) )
@@ -129,15 +130,13 @@ class SpdController():
             v_curvature = np.sqrt(a_y_max / np.clip(np.abs(curv), 1e-4, None))
             model_speed = np.min(v_curvature)
             # Don't slow down below 20mph
-
-            model_speed *= CV.MS_TO_KPH
-            model_speed = max(30.0, model_speed)
+           # model_speed = max(30.0 * CV.KPH_TO_MS, model_speed)
            # print( 'v_curvature = {}'.format( v_curvature) )
             #print( 'model_speed = {}  '.format( model_speed) )
 
-            
-            if model_speed > MAX_SPEED:
-               model_speed = MAX_SPEED
+           # model_speed = model_speed * CV.MS_TO_KPH
+            #if model_speed > MAX_SPEED:
+           #     model_speed = MAX_SPEED
         else:
             model_speed = MAX_SPEED
           
@@ -146,10 +145,11 @@ class SpdController():
 
 
     def calc_va(self, sm, v_ego):
-        md = sm['model']
+        md = sm['modelV2']
         #print('{}'.format( md ) )
-        if len(md.path.poly):
-            self.prob = list(md.path.poly)
+        if len(md.laneLines) > 1:
+            self.prob = md.laneLines[1].y
+            #self.prob = md.curv
 
             model_speed = self.calc_laneProb( self.prob, v_ego )
     
@@ -206,7 +206,7 @@ class SpdController():
             self.curise_set_first = 1
             self.prev_VSetDis = int(CS.VSetDis)
             set_speed_kph = CS.VSetDis
-            if not CS.acc_active and self.prev_clu_CruiseSwState != CS.cruise_buttons:  # MODE 전환.
+            if not CS.acc_active and self.prev_clu_CruiseSwState != CS.cruise_buttons:  # MODE ?�환.
                 if CS.cruise_buttons == Buttons.GAP_DIST: 
                     self.cruise_set_mode += 1
                 if self.cruise_set_mode > 4:
@@ -242,7 +242,7 @@ class SpdController():
         delta_speed = CS.VSetDis - CS.clu_Vanz
         set_speed = int(CS.VSetDis) + add_val
         
-        if add_val > 0:  # 증가
+        if add_val > 0:  # 증�?
             if delta_speed > safety_dis:
                 time = 100
         else:
@@ -278,7 +278,7 @@ class SpdController():
             self.long_curv_timer += 1
 
 
-        # 선행 차량 거리유지
+        # ?�행 차량 거리?��?
         lead_wait_cmd, lead_set_speed = self.update_lead( CS,  dRel, vRel )  
 
         # 커브 감속.
@@ -309,7 +309,7 @@ class SpdController():
 
         if self.long_curv_timer < long_wait_cmd:
             pass
-        elif CS.driverOverride == 1:  # 가속패달에 의한 속도 설정.
+        elif CS.driverOverride == 1:  # 가?�패?�에 ?�한 ?�도 ?�정.
             if self.cruise_set_speed_kph > CS.clu_Vanz:
                 delta = int(CS.clu_Vanz) - int(CS.VSetDis)
                 if delta > 1:

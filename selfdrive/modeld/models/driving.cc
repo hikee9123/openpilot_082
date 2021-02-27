@@ -29,9 +29,6 @@ constexpr int LEAD_MHP_SELECTION = 3;
 constexpr int LEAD_MHP_GROUP_SIZE = (2*LEAD_MHP_VALS + LEAD_MHP_SELECTION);
 
 constexpr int POSE_SIZE = 12;
-constexpr int MIN_VALID_LEN = 10;
-//constexpr int TRAJECTORY_TIME = 10;
-//constexpr float TRAJECTORY_DISTANCE = 192.0;
 
 constexpr int PLAN_IDX = 0;
 constexpr int LL_IDX = PLAN_IDX + PLAN_MHP_N*PLAN_MHP_GROUP_SIZE;
@@ -50,8 +47,6 @@ constexpr int OUTPUT_SIZE =  POSE_IDX + POSE_SIZE;
 #endif
 
 // #define DUMP_YUV
-Eigen::Matrix<float, MODEL_PATH_DISTANCE, POLYFIT_DEGREE - 1> vander;
-
 
 void model_init(ModelState* s, cl_device_id device_id, cl_context context) {
   frame_init(&s->frame, MODEL_WIDTH, MODEL_HEIGHT, device_id, context);
@@ -79,15 +74,6 @@ void model_init(ModelState* s, cl_device_id device_id, cl_context context) {
   s->traffic_convention[idx] = 1.0;
   s->m->addTrafficConvention(s->traffic_convention, TRAFFIC_CONVENTION_LEN);
 #endif
-
-  // Build Vandermonde matrix
-  for(int i = 0; i < TRAJECTORY_SIZE; i++) {
-    for(int j = 0; j < POLYFIT_DEGREE - 1; j++) {
-     // X_IDXS[i] = (TRAJECTORY_DISTANCE/1024.0) * (pow(i,2));
-     // T_IDXS[i] = (TRAJECTORY_TIME/1024.0) * (pow(i,2));
-      vander(i, j) = pow(X_IDXS[i], POLYFIT_DEGREE-j-1);
-    }
-  }
 
   s->q = CL_CHECK_ERR(clCreateCommandQueue(context, device_id, 0, &err));
 }
@@ -176,39 +162,6 @@ void fill_lead_v2(cereal::ModelDataV2::LeadDataV2::Builder lead, const float *le
   lead.setXyva(xyva_arr);
   lead.setXyvaStd(xyva_stds_arr);
 }
-
-
-void fill_lead(cereal::ModelData::LeadData::Builder lead, const float *lead_data, const float *prob, int t_offset) {
-  const float *data = get_lead_data(lead_data, t_offset);
-  lead.setProb(sigmoid(prob[t_offset]));
-  lead.setDist(data[0]);
-  lead.setStd(exp(data[LEAD_MHP_VALS]));
-  // TODO make all msgs same format
-  lead.setRelY(-data[1]);
-  lead.setRelYStd(exp(data[LEAD_MHP_VALS + 1]));
-  lead.setRelVel(data[2]);
-  lead.setRelVelStd(exp(data[LEAD_MHP_VALS + 2]));
-  lead.setRelA(data[3]);
-  lead.setRelAStd(exp(data[LEAD_MHP_VALS + 3]));
-}
-
-template <class MetaBuilder>
-void fill_meta(MetaBuilder meta, const float *meta_data) {
-  float desire_state_softmax[DESIRE_LEN];
-  float desire_pred_softmax[4*DESIRE_LEN];
-  softmax(&meta_data[0], desire_state_softmax, DESIRE_LEN);
-  for (int i=0; i<4; i++) {
-    softmax(&meta_data[DESIRE_LEN + OTHER_META_SIZE + i*DESIRE_LEN],
-            &desire_pred_softmax[i*DESIRE_LEN], DESIRE_LEN);
-  }
-  meta.setDesireState(desire_state_softmax);
-  meta.setEngagedProb(sigmoid(meta_data[DESIRE_LEN]));
-  meta.setGasDisengageProb(sigmoid(meta_data[DESIRE_LEN + 1]));
-  meta.setBrakeDisengageProb(sigmoid(meta_data[DESIRE_LEN + 2]));
-  meta.setSteerOverrideProb(sigmoid(meta_data[DESIRE_LEN + 3]));
-  meta.setDesirePrediction(desire_pred_softmax);
-}
-
 
 void fill_meta(cereal::ModelDataV2::MetaData::Builder meta, const float *meta_data) {
   float desire_state_softmax[DESIRE_LEN];
@@ -308,109 +261,6 @@ void fill_model(cereal::ModelDataV2::Builder &framed, const ModelDataRaw &net_ou
   }
 }
 
-
-
-void poly_fit(float *in_pts, float *in_stds, float *out, int valid_len) {
-  // References to inputs
-  Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, 1> > pts(in_pts, valid_len);
-  Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, 1> > std(in_stds, valid_len);
-  Eigen::Map<Eigen::Matrix<float, POLYFIT_DEGREE - 1, 1> > p(out, POLYFIT_DEGREE - 1);
-
-  float y0 = pts[0];
-  pts = pts.array() - y0;
-
-  // Build Least Squares equations
-  Eigen::Matrix<float, Eigen::Dynamic, POLYFIT_DEGREE - 1> lhs = vander.topRows(valid_len).array().colwise() / std.array();
-  Eigen::Matrix<float, Eigen::Dynamic, 1> rhs = pts.array() / std.array();
-
-  // Improve numerical stability
-  Eigen::Matrix<float, POLYFIT_DEGREE - 1, 1> scale = 1. / (lhs.array()*lhs.array()).sqrt().colwise().sum();
-  lhs = lhs * scale.asDiagonal();
-
-  // Solve inplace
-  p = lhs.colPivHouseholderQr().solve(rhs);
-
-  // Apply scale to output
-  p = p.transpose() * scale.asDiagonal();
-  out[3] = y0;
-}
-
-void fill_path(cereal::ModelData::PathData::Builder path, const float *data, const float prob,
-               float valid_len, int valid_len_idx, int ll_idx) {
-  float points[TRAJECTORY_SIZE] = {};
-  float stds[TRAJECTORY_SIZE] = {};
-  float poly[POLYFIT_DEGREE] = {};
-
-  for (int i=0; i<TRAJECTORY_SIZE; i++) {
-    // negative sign because mpc has left positive
-    if (ll_idx == 0) {
-      points[i] = -data[30 * i + 16];
-      stds[i] = exp(data[30 * (33 + i) + 16]);
-    } else {
-      points[i] = -data[2 * 33 * ll_idx + 2 * i];
-      stds[i] = exp(data[2 * 33 * (4 + ll_idx) + 2 * i]);
-    }
-  }
-  const float std = stds[0];
-  poly_fit(points, stds, poly, valid_len_idx);
-
-  path.setPoly(poly);
-  path.setProb(prob);
-  path.setStd(std);
-  path.setValidLen(valid_len);
-}
-
-void fill_model(cereal::ModelData::Builder &framed, const ModelDataRaw &net_outputs) {
-  // Find the distribution that corresponds to the most probable plan
-  const float *best_plan = get_plan_data(net_outputs.plan);
-  // x pos at 10s is a good valid_len
-  float valid_len = 0;
-  for (int i=1; i<TRAJECTORY_SIZE; i++) {
-    if (const float len = best_plan[30*i]; len >= valid_len){
-      valid_len = len;
-    }
-  }
-  // clamp to 10 and MODEL_PATH_DISTANCE
-  valid_len = fmin(MODEL_PATH_DISTANCE, fmax(MIN_VALID_LEN, valid_len));
-  int valid_len_idx = 0;
-  for (int i=1; i<TRAJECTORY_SIZE; i++) {
-    if (valid_len >= X_IDXS[valid_len_idx]){
-      valid_len_idx = i;
-    }
-  }
-  fill_path(framed.initPath(), best_plan, 1.0, valid_len, valid_len_idx, 0);
-  fill_path(framed.initLeftLane(), net_outputs.lane_lines, sigmoid(net_outputs.lane_lines_prob[1]), valid_len, valid_len_idx, 1);
-  fill_path(framed.initRightLane(), net_outputs.lane_lines, sigmoid(net_outputs.lane_lines_prob[2]), valid_len, valid_len_idx, 2);
-
-  fill_lead(framed.initLead(), net_outputs.lead, net_outputs.lead_prob, 0);
-  fill_lead(framed.initLeadFuture(), net_outputs.lead, net_outputs.lead_prob, 1);
-
-  fill_meta(framed.initMeta(), net_outputs.meta);
-}
-
-
-
-void model_publish1(PubMaster &pm, uint32_t vipc_frame_id, uint32_t frame_id, float frame_drop,
-                   const ModelDataRaw &net_outputs, uint64_t timestamp_eof,
-                   float model_execution_time, kj::ArrayPtr<const float> raw_pred) 
-{
-
-    const uint32_t frame_age = (frame_id > vipc_frame_id) ? (frame_id - vipc_frame_id) : 0;
-    MessageBuilder msg;
-    auto framed = msg.initEvent().initModel();
-    framed.setFrameId(vipc_frame_id);
-    framed.setFrameAge(frame_age);
-    framed.setFrameDropPerc(frame_drop * 100);
-    framed.setTimestampEof(timestamp_eof);
-    framed.setModelExecutionTime(model_execution_time);
-    if (send_raw_pred) 
-    {
-      framed.setRawPred(raw_pred.asBytes());
-    }
-    fill_model(framed, net_outputs);
-    pm.send("model", msg);
-}
-
 void model_publish(PubMaster &pm, uint32_t vipc_frame_id, uint32_t frame_id, float frame_drop,
                    const ModelDataRaw &net_outputs, uint64_t timestamp_eof,
                    float model_execution_time, kj::ArrayPtr<const float> raw_pred) {
@@ -428,10 +278,6 @@ void model_publish(PubMaster &pm, uint32_t vipc_frame_id, uint32_t frame_id, flo
   fill_model(framed, net_outputs);
   pm.send("modelV2", msg);
 }
-
-
-
-
 
 void posenet_publish(PubMaster &pm, uint32_t vipc_frame_id, uint32_t vipc_dropped_frames,
                      const ModelDataRaw &net_outputs, uint64_t timestamp_eof) {

@@ -1,8 +1,4 @@
 #pragma once
-
-const int MODEL_PATH_DISTANCE = 192;
-const int POLYFIT_DEGREE = 4;
-
 const int  TRAJECTORY_SIZE = 33;
 const float MIN_DRAW_DISTANCE = 10.0;
 const float MAX_DRAW_DISTANCE = 100.0;
