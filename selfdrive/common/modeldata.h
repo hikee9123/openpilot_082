@@ -1,7 +1,9 @@
 #pragma once
+
 const int  TRAJECTORY_SIZE = 33;
 const float MIN_DRAW_DISTANCE = 10.0;
 const float MAX_DRAW_DISTANCE = 100.0;
+
 
 const double T_IDXS[TRAJECTORY_SIZE] = {0.        ,  0.00976562,  0.0390625 ,  0.08789062,  0.15625   ,
         0.24414062,  0.3515625 ,  0.47851562,  0.625     ,  0.79101562,
