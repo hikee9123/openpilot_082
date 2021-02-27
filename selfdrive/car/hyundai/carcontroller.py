@@ -224,9 +224,6 @@ class CarController():
     else:
       self.model_speed =  0
 
-  
-    #self.model_speed = interp(abs(path_plan.vCruiseSet), [0.0005, 0.015], [255, 30])
-
 
     # Steering Torque
     param, dst_steer = self.steerParams_torque( CS, c.actuators, path_plan )
@@ -273,7 +270,7 @@ class CarController():
 
     run_speed_ctrl = CS.acc_active and self.SC != None
     if not run_speed_ctrl:
-      str_log2 = 'LKAS={:.0f}  steer={:5.0f} '.format(  CS.lkas_button_on,  CS.out.steeringTorque  )
+      str_log2 = 'LKAS={:.0f}  steer={:5.0f} d={:.0f} v={:.0f}'.format(  CS.lkas_button_on,  CS.out.steeringTorque, self.dRel, self.vRel  )
       trace1.printf2( '{}'.format( str_log2 ) )
 
 

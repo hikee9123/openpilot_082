@@ -9,7 +9,7 @@ class kegman_conf():
     self.config = None
     self.init = { 
         "tun_type": "lqr",
-        "learnerParams": 3, 
+        "learnerParams": 1, 
         "ap_autoReasume": 1,
         "ap_autoScnOffTime": 10,
         "cv_KPH": [30,60],
