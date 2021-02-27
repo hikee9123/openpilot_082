@@ -261,6 +261,35 @@ void fill_model(cereal::ModelDataV2::Builder &framed, const ModelDataRaw &net_ou
   }
 }
 
+
+void fill_model(cereal::ModelData::Builder &framed, const ModelDataRaw &net_outputs) {
+  // Find the distribution that corresponds to the most probable plan
+  const float *best_plan = get_plan_data(net_outputs.plan);
+  // x pos at 10s is a good valid_len
+  float valid_len = 0;
+  for (int i=1; i<TRAJECTORY_SIZE; i++) {
+    if (const float len = best_plan[30*i]; len >= valid_len){
+      valid_len = len;
+    }
+  }
+  // clamp to 10 and MODEL_PATH_DISTANCE
+  valid_len = fmin(MODEL_PATH_DISTANCE, fmax(MIN_VALID_LEN, valid_len));
+  int valid_len_idx = 0;
+  for (int i=1; i<TRAJECTORY_SIZE; i++) {
+    if (valid_len >= X_IDXS[valid_len_idx]){
+      valid_len_idx = i;
+    }
+  }
+  fill_path(framed.initPath(), best_plan, 1.0, valid_len, valid_len_idx, 0);
+  fill_path(framed.initLeftLane(), net_outputs.lane_lines, sigmoid(net_outputs.lane_lines_prob[1]), valid_len, valid_len_idx, 1);
+  fill_path(framed.initRightLane(), net_outputs.lane_lines, sigmoid(net_outputs.lane_lines_prob[2]), valid_len, valid_len_idx, 2);
+
+  fill_lead(framed.initLead(), net_outputs.lead, net_outputs.lead_prob, 0);
+  fill_lead(framed.initLeadFuture(), net_outputs.lead, net_outputs.lead_prob, 1);
+
+  fill_meta(framed.initMeta(), net_outputs.meta);
+}
+
 /*
 void model_publish(PubMaster &pm, uint32_t vipc_frame_id, uint32_t frame_id, float frame_drop,
                    const ModelDataRaw &net_outputs, uint64_t timestamp_eof,
