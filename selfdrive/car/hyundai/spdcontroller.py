@@ -159,11 +159,10 @@ class SpdController():
                 self.old_model_speed = model_speed
             elif self.old_model_speed == model_speed:
                 pass
-            elif delta_model > 1:
-                self.old_model_speed += 1  #model_speed
-            elif delta_model < 0:
-                self.old_model_speed -= 0.1
-
+            elif delta_model < -1:
+                self.old_model_speed -= 1  #model_speed
+            elif delta_model > 0:
+                self.old_model_speed += 0.1
             else:
                 self.old_model_speed = model_speed
 
@@ -206,7 +205,7 @@ class SpdController():
             self.curise_set_first = 1
             self.prev_VSetDis = int(CS.VSetDis)
             set_speed_kph = CS.VSetDis
-            if not CS.acc_active and self.prev_clu_CruiseSwState != CS.cruise_buttons:  # MODE ?�환.
+            if not CS.acc_active and self.prev_clu_CruiseSwState != CS.cruise_buttons:  # MODE ?„í™˜.
                 if CS.cruise_buttons == Buttons.GAP_DIST: 
                     self.cruise_set_mode += 1
                 if self.cruise_set_mode > 4:
@@ -242,7 +241,7 @@ class SpdController():
         delta_speed = CS.VSetDis - CS.clu_Vanz
         set_speed = int(CS.VSetDis) + add_val
         
-        if add_val > 0:  # 증�?
+        if add_val > 0:  # ì¦ê?
             if delta_speed > safety_dis:
                 time = 100
         else:
@@ -278,10 +277,10 @@ class SpdController():
             self.long_curv_timer += 1
 
 
-        # ?�행 차량 거리?��?
+        # ? í–‰ ì°¨ëŸ‰ ê±°ë¦¬? ì?
         lead_wait_cmd, lead_set_speed = self.update_lead( CS,  dRel, vRel )  
 
-        # 커브 감속.
+        # ì»¤ë¸Œ ê°ì†.
         model_speed = CC.model_speed   #calc_va( CS.out.vEgo )
         curv_wait_cmd, curv_set_speed = self.update_curv(CS, sm, model_speed)
 
@@ -309,7 +308,7 @@ class SpdController():
 
         if self.long_curv_timer < long_wait_cmd:
             pass
-        elif CS.driverOverride == 1:  # 가?�패?�에 ?�한 ?�도 ?�정.
+        elif CS.driverOverride == 1:  # ê°€?íŒ¨?¬ì— ?˜í•œ ?ë„ ?¤ì •.
             if self.cruise_set_speed_kph > CS.clu_Vanz:
                 delta = int(CS.clu_Vanz) - int(CS.VSetDis)
                 if delta > 1:
