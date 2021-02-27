@@ -159,10 +159,10 @@ class SpdController():
                 self.old_model_speed = model_speed
             elif self.old_model_speed == model_speed:
                 pass
-            elif delta_model > 1:
-                self.old_model_speed += 1  #model_speed
-            elif delta_model < 0:
-                self.old_model_speed -= 0.1
+            elif delta_model < -1:
+                self.old_model_speed -= 1  #model_speed
+            elif delta_model > 0:
+                self.old_model_speed += 0.1
 
             else:
                 self.old_model_speed = model_speed
