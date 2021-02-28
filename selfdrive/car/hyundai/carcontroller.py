@@ -265,7 +265,6 @@ class CarController():
 
 
     #str_log1 = 'Navi=S:{} P:{:.1f} CA:{} CS:{}'.format( CS.ACC_ObjStatus, CS.ACC_ObjLatPos, CS.Navi_SCC_Camera_Act, CS.Navi_SCC_Camera_Status )
-
     #trace1.printf( '{}'.format( str_log1 ) )
 
     run_speed_ctrl = CS.acc_active and self.SC != None
