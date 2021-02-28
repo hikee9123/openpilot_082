@@ -11,7 +11,6 @@ class AtomConf():
     self.cv_steerRatioV = [[13.85]]
     self.cv_ActuatorDelayV = [[0.1]]
 
-    self.sR_pid_KdV     = [[1.0]]
     self.sR_pid_KiV     = [[0.01]]
     self.sR_pid_KpV     = [[0.15]]
     self.sR_pid_deadzone  = 0.1
@@ -48,7 +47,6 @@ class AtomConf():
     self.cv_steerRatioV  = conf['cv_steerRatioV']
     self.cv_ActuatorDelayV = conf['cv_ActuatorDelayV'] 
 
-    self.sR_pid_KdV  = conf['sR_pid_KdV'] 
     self.sR_pid_KiV  = conf['sR_pid_KiV']
     self.sR_pid_KpV  = conf['sR_pid_KpV']
     self.sR_pid_deadzone  = conf['sR_pid_deadzone']
