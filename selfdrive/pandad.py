@@ -108,6 +108,7 @@ def update_panda():
     cloudlog.info("Version mismatch after flashing, exiting")
     raise AssertionError
 
+  #  Instrument cluster alarm has occurred
   #cloudlog.info("Resetting panda")
   #panda.reset()
 
