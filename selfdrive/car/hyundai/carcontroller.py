@@ -114,7 +114,7 @@ class CarController():
 
 
 
-  def atom_tune( self, v_ego_kph, cv_value ):  # cV(°î·ü¿¡ ÀÇÇÑ º¯È­)
+  def atom_tune( self, v_ego_kph, cv_value ):  # cV(ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­)
     self.cv_KPH = self.CP.atomTuning.cvKPH
     self.cv_BPV = self.CP.atomTuning.cvBPV
     self.cv_sMaxV  = self.CP.atomTuning.cvsMaxV
@@ -163,18 +163,18 @@ class CarController():
       param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, nUP)
       param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, nDN )
 
-    sec_mval = 10.0  # ¿ÀÆÄ => ¿îÀüÀÚ.  (sec)
-    sec_pval = 3  #  ¿îÀüÀÚ => ¿ÀÆÄ  (sec)
+    sec_mval = 2.0  # ì˜¤íŒŒ => ìš´ì „ìž.  (sec)
+    sec_pval = 3 #  ìš´ì „ìž => ì˜¤íŒŒ  (sec)
     # streer over check
 
 
     if path_plan.laneChangeState != LaneChangeState.off:
       self.steer_torque_over_timer = 0
     elif CS.out.leftBlinker or CS.out.rightBlinker:
-      sec_mval = 0.5  # ¿ÀÆÄ => ¿îÀüÀÚ.
-      sec_pval = 10 # ¿îÀüÀÚ => ¿ÀÆÄ  (sec)
+      sec_mval = 0.5 # ì˜¤íŒŒ => ìš´ì „ìž.
+      sec_pval = 10  # ìš´ì „ìž => ì˜¤íŒŒ  (sec)
 
-    if v_ego_kph > 5 and CS.out.steeringPressed and CS.out.cruiseState.enabled:  #»ç¿ëÀÚ ÇÚµé ÅäÅ©
+    if v_ego_kph > 5 and CS.out.steeringPressed and CS.out.cruiseState.enabled:  #ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½Å©
       if abs_angle_steers > 5 and CS.out.steeringTorque < -10:   #right
         if dst_steer < 0:
           self.steer_torque_over_timer = 0
