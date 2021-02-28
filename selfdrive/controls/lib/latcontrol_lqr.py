@@ -4,6 +4,7 @@ from common.numpy_fast import clip
 from common.realtime import DT_CTRL
 from cereal import log
 
+import common.MoveAvg as ma
 from common.numpy_fast import interp
 from selfdrive.config import Conversions as CV
 
@@ -27,6 +28,8 @@ class LatControlLQR():
     self.sat_limit = CP.steerLimitTimer
 
     self.reset()
+
+    self.m_avg = ma.MoveAvg()
 
   def reset(self):
     self.i_lqr = 0.0
