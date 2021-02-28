@@ -72,8 +72,8 @@ class LatControlLQR():
     lqr_log = log.ControlsState.LateralLQRState.new_message()
 
     
-    atomTuning = self.CP.atomTuning
-    lateralsRatom = self.CP.lateralsRatom
+    atomTuning = CP.atomTuning
+    lateralsRatom = CP.lateralsRatom
 
     steers_max = get_steer_max(CP, CS.vEgo)
     torque_scale = (0.45 + CS.vEgo / 60.0)**2  # Scale actuator model with speed
