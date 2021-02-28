@@ -133,8 +133,8 @@ class LateralPlanner():
 
 
   def atom_tune( self, v_ego_kph, sr_value,  atomTuning ):  
-    self.sr_KPH = atomTuning.sRKPH
-    self.sr_BPV = atomTuning.sRBPV
+    self.sr_KPH = atomTuning.cvKPH
+    self.sr_BPV = atomTuning.cvBPV
     self.sr_steerRatioV = atomTuning.sRsteerRatioV
     self.sr_SteerRatio = []
 
@@ -150,8 +150,8 @@ class LateralPlanner():
     return steerRatio
 
   def atom_actuatorDelay( self, v_ego_kph, sr_value, atomTuning ):
-    self.sr_KPH = atomTuning.sRKPH
-    self.sr_BPV = atomTuning.sRBPV
+    self.sr_KPH = atomTuning.cvKPH
+    self.sr_BPV = atomTuning.cvBPV
     self.sr_ActuatorDelayV = atomTuning.sRsteerActuatorDelayV
     self.sr_ActuatorDelay = []
 

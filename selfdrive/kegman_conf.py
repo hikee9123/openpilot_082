@@ -2,7 +2,7 @@ import json
 import os
 
 
-json_file_name = '/data/openpilot/atom_2.json'
+json_file_name = '/data/openpilot/atom_3.json'
 
 class kegman_conf():
   def __init__(self, CP=None):
@@ -17,15 +17,15 @@ class kegman_conf():
         "cv_sMaxV": [[384],[384,384]],
         "cv_sdDNV": [[1],[5,1]],
         "cv_sdUPV": [[1],[3,1]],
+        "sR_steerRatioV": [[13.2],[17.3,15.0]],
+        "sR_ActuatorDelayV": [[0.1],[0.1,0.2]],        
         "sR_KPH": [30,60],
-        "sR_BPV": [[255],[100,255]],
+        "sR_BPV": [[0],[-5,0,5]],
         "sR_lqr_kiV": [[0.01],[0.02,0.01]],
         "sR_lqr_scaleV": [[2000],[1850,1900]],
         "sR_pid_KpV": [[0.2],[0.20,0.15]],
         "sR_pid_KiV": [[0.1],[0.02,0.02]],
         "sR_pid_KdV": [[2.5],[2.5,2.5]],
-        "sR_steerRatioV": [[13.2],[17.3,15.0]],
-        "sR_ActuatorDelayV": [[0.1],[0.1,0.2]],
         "sR_pid_deadzone": 0.0,
         "steerLimitTimer": 0.8,
         "steerOffset": 0.0,

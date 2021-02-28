@@ -86,10 +86,10 @@ class LatControlLQR():
     v_ego_kph = CS.vEgo * CV.MS_TO_KPH
 
     
-    if lateralsRatom.learnerParams == 3:
-      target_value = self.m_avg.get_avg( model_speed, 5)
-    else:
-      target_value = CS.steeringAngleDeg
+    #if lateralsRatom.learnerParams == 3:
+    #  target_value = self.m_avg.get_avg( model_speed, 5)
+    #else:
+    target_value = CS.steeringAngleDeg
       
     self.ki, self.scale = self.atom_tune( v_ego_kph, target_value, CP )
     # Subtract offset. Zero angle should correspond to zero torque
