@@ -71,7 +71,7 @@ class LatControlLQR():
      
     return rt_ki, rt_scale
 
-  def update(self, active, CS, CP, lat_plan, model_speed):
+  def update(self, active, CS, CP, lat_plan):
     lqr_log = log.ControlsState.LateralLQRState.new_message()
 
     

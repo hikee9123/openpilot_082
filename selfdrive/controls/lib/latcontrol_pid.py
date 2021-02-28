@@ -65,7 +65,7 @@ class LatControlPID():
     MsV, KiV, KpV, KdV = self.atom_tune( v_ego_kph, sr_value, CP )
     self.pid.gain( (MsV, KpV), (MsV, KiV), (MsV, KdV), k_f=CP.lateralTuning.pid.kf )
 
-  def update(self, active, CS, CP, lat_plan, model_speed):
+  def update(self, active, CS, CP, lat_plan):
     self.angle_steers_des = lat_plan.steeringAngleDeg  # get from MPC/PathPlanner
     self.deadzone = CP.lateralsRatom.deadzone
     self.linear2_tune( CS, CP )
