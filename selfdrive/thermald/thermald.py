@@ -188,6 +188,7 @@ def thermald_thread():
   thermal_config = HARDWARE.get_thermal_config()
 
   while 1:
+    ts = sec_since_boot()
     pandaState = messaging.recv_sock(pandaState_sock, wait=True)
     msg = read_thermal(thermal_config)
 
