@@ -7,6 +7,21 @@ from selfdrive.car.fingerprints import _FINGERPRINTS as FINGERPRINTS
 
 from cereal import car
 
+import cereal.messaging as messaging
+from selfdrive.car.hyundai.spdctrlSlow  import SpdctrlSlow
+
+class TestSpdCtrl:
+  def __init__(self):  
+    self.SC = SpdctrlSlow()
+
+    self.sm = messaging.SubMaster(['modelV2'])
+
+
+  def test(self):
+      self.sm.update()
+      model_speed = self.SC.calc_va(  self.sm, 30  )
+      print( 'model_speed = {}'.format( model_speed) )
+
 
 class TestCarInterfaces(unittest.TestCase):
   def test_car_interfaces(self):
@@ -50,10 +65,10 @@ class TestCarInterfaces(unittest.TestCase):
 
       CC = car.CarControl.new_message()
       CC.enabled = True
-      for _ in range(10):
-        car_interface.update(CC, [])
-        car_interface.apply(CC)
-        car_interface.apply(CC)
+      #for _ in range(10):
+      #  car_interface.update(CC, [])
+      #  car_interface.apply(CC)
+      #  car_interface.apply(CC)
 
       # Test radar interface
       RadarInterface = importlib.import_module('selfdrive.car.%s.radar_interface' % car_params.carName).RadarInterface
@@ -66,4 +81,7 @@ class TestCarInterfaces(unittest.TestCase):
         radar_interface._update([radar_interface.trigger_msg])
 
 if __name__ == "__main__":
-  unittest.main()
+  #unittest.main()
+
+  spdCtrl = TestSpdCtrl()
+  spdCtrl.test()

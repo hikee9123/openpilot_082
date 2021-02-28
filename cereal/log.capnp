@@ -283,6 +283,7 @@ struct DeviceState @0xa4d8b5af2aa492eb {
   offroadPowerUsageUwh @23 :UInt32;
   networkStrength @24 :NetworkStrength;
   carBatteryCapacityUwh @25 :UInt32;
+  wifiIpAddress @31 :Text;
 
   fanSpeedPercentDesired @10 :UInt16;
   started @11 :Bool;
@@ -517,6 +518,11 @@ struct ControlsState @0x97ff69c53601abf1 {
   cumLagMs @15 :Float32;
   canErrorCounter @57 :UInt32;
 
+  output @58 :Float32;
+  alertTextMsg1  @59 :Text;
+  alertTextMsg2  @60 :Text;
+  modelSpeed  @61 :Float32;
+
   lateralControlState :union {
     indiState @52 :LateralINDIState;
     pidState @53 :LateralPIDState;
@@ -641,6 +647,18 @@ struct ModelDataV2 {
   leads @11 :List(LeadDataV2);
 
   meta @12 :MetaData;
+
+
+  path @18 :PathData;
+
+  struct PathData {
+    points @0 :List(Float32);
+    prob @1 :Float32;
+    std @2 :Float32;
+    stds @3 :List(Float32);
+    poly @4 :List(Float32);
+    validLen @5 :Float32;
+  } 
 
   # All SI units and in device frame
   struct XYZTData {
@@ -777,6 +795,8 @@ struct LateralPlan @0xe1e9318e2ae8b51e {
   desire @17 :Desire;
   laneChangeState @18 :LaneChangeState;
   laneChangeDirection @19 :LaneChangeDirection;
+  
+  steerRatio @22 :Float32;
 
   enum Desire {
     none @0;

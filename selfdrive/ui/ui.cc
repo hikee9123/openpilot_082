@@ -42,7 +42,9 @@ static void ui_init_vision(UIState *s) {
 
 void ui_init(UIState *s) {
   s->sm = new SubMaster({"modelV2", "controlsState", "uiLayoutState", "liveCalibration", "radarState", "deviceState", "roadCameraState", "liveLocationKalman",
-                         "pandaState", "carParams", "driverState", "driverMonitoringState", "sensorEvents", "carState", "ubloxGnss"});
+                         "pandaState", "carParams", "driverState", "driverMonitoringState", "sensorEvents", "carState", "ubloxGnss",
+                         "liveParameters","lateralPlan","carControl","gpsLocationExternal"});
+
 
   s->started = false;
   s->status = STATUS_OFFROAD;
@@ -126,6 +128,17 @@ static void update_sockets(UIState *s) {
   UIScene &scene = s->scene;
   if (s->started && sm.updated("controlsState")) {
     scene.controls_state = sm["controlsState"].getControlsState();
+
+// debug Message
+    std::string user_text1 = scene.controls_state.getAlertTextMsg1();
+    std::string user_text2 = scene.controls_state.getAlertTextMsg2();
+    const char* va_text1 = user_text1.c_str();
+    const char* va_text2 = user_text2.c_str();    
+    if (va_text1) snprintf(scene.alert.text1, sizeof(scene.alert.text1), "%s", va_text1);
+    else  scene.alert.text1[0] = '\0';
+
+    if (va_text2) snprintf(scene.alert.text2, sizeof(scene.alert.text2), "%s", va_text2);
+    else scene.alert.text2[0] = '\0';    
   }
   if (sm.updated("carState")) {
     scene.car_state = sm["carState"].getCarState();
@@ -176,6 +189,9 @@ static void update_sockets(UIState *s) {
     if (data.which() == cereal::UbloxGnss::MEASUREMENT_REPORT) {
       scene.satelliteCount = data.getMeasurementReport().getNumMeas();
     }
+
+    scene.gpsLocationExternal = sm["gpsLocationExternal"].getGpsLocationExternal();
+  
   }
   if (sm.updated("liveLocationKalman")) {
     scene.gpsOK = sm["liveLocationKalman"].getLiveLocationKalman().getGpsOK();
@@ -206,6 +222,28 @@ static void update_sockets(UIState *s) {
     }
   }
   s->started = scene.deviceState.getStarted() || scene.frontview;
+
+
+   if (sm.updated("liveParameters")) 
+  {
+    scene.liveParameters = sm["liveParameters"].getLiveParameters();
+  }
+
+  if( sm.updated("roadCameraState") )
+  {
+    scene.frame = sm["roadCameraState"].getRoadCameraState();
+  }
+
+   if (sm.updated("lateralPlan"))
+   {
+    scene.lateralPlan = sm["lateralPlan"].getLateralPlan();
+   } 
+
+   if (sm.updated("carControl"))
+   {
+    scene.carControl = sm["carControl"].getCarControl();
+   } 
+ 
 }
 
 static void update_alert(UIState *s) {

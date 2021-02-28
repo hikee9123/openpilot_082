@@ -120,6 +120,11 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     focusRecoverActiveDEPRECATED @86;
     neosUpdateRequiredDEPRECATED @88;
     modelLagWarningDEPRECATED @93;
+
+    steerTorqueOver @96;
+    steerTorqueLow @97;
+    laneChangeManual @98;
+    emgButtonManual @99;  
   }
 }
 
@@ -186,6 +191,8 @@ struct CarState {
   leftBlindspot @33 :Bool; # Is there something blocking the left lane change
   rightBlindspot @34 :Bool; # Is there something blocking the right lane change
 
+  tpms @37 :WheelSpeeds;
+
   struct WheelSpeeds {
     # optional wheel speeds
     fl @0 :Float32;
@@ -201,6 +208,8 @@ struct CarState {
     speedOffset @3 :Float32;
     standstill @4 :Bool;
     nonAdaptive @5 :Bool;
+    modeSel @6 :Int16;
+    cruiseSwState @7 :Int16;        
   }
 
   enum GearShifter {
@@ -416,6 +425,37 @@ struct CarParams {
   fingerprintSource @49: FingerprintSource;
   networkLocation @50 :NetworkLocation;  # Where Panda/C2 is integrated into the car's CAN network
 
+
+  lateralsRatom @55 :LateralsRatom;
+  atomTuning @56 :AtomTuning;
+
+  struct AtomTuning {
+    cvKPH @0 :List(Float32);
+    cvBPV @1 :List(List(Float32));
+    cvsMaxV @2 :List(List(Float32));
+    cvsdUpV @3 :List(List(Float32));
+    cvsdDnV @4 :List(List(Float32));
+    sRKPH @5 :List(Float32);
+    sRBPV @6 :List(List(Float32));
+    sRsteerRatioV @7 :List(List(Float32));
+    sRlqrkiV @8 :List(List(Float32));
+    sRlqrscaleV @9 :List(List(Float32));
+    sRpidKdV @10 :List(List(Float32));
+    sRpidKiV @11 :List(List(Float32));
+    sRpidKpV @12 :List(List(Float32));
+    sRsteerActuatorDelayV @13 :List(List(Float32));
+  }
+
+
+  struct LateralsRatom {
+    deadzone @0 :Float32;
+    steerOffset @1 :Float32;
+    cameraOffset @2 :Float32;
+    opkrAutoResume @3 :Int16;
+    opkrAutoScreenOff @4 :Int16;
+    learnerParams @5 :Int16;       
+  }
+
   struct LateralParams {
     torqueBP @0 :List(Int32);
     torqueV @1 :List(Int32);
@@ -427,6 +467,8 @@ struct CarParams {
     kiBP @2 :List(Float32);
     kiV @3 :List(Float32);
     kf @4 :Float32;
+    kdBP @5 :List(Float32) = [0.];
+    kdV @6 :List(Float32) = [0.];       
   }
 
   struct LongitudinalPIDTuning {

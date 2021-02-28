@@ -4,6 +4,8 @@ from common.numpy_fast import clip
 from common.realtime import DT_CTRL
 from cereal import log
 
+from common.numpy_fast import interp
+from selfdrive.config import Conversions as CV
 
 class LatControlLQR():
   def __init__(self, CP):
@@ -43,14 +45,51 @@ class LatControlLQR():
 
     return self.sat_count > self.sat_limit
 
-  def update(self, active, CS, CP, lat_plan):
+
+  def atom_tune( self, v_ego_kph, sr_value, CP ):  # 조향각에 따른 변화.
+    self.sr_KPH = CP.atomTuning.sRKPH
+    self.sr_BPV = CP.atomTuning.sRBPV
+    self.sR_lqr_kiV  = CP.atomTuning.sRlqrkiV
+    self.sR_lqr_scaleV = CP.atomTuning.sRlqrscaleV
+
+    self.ki = []
+    self.scale = []
+
+    nPos = 0
+    for steerRatio in self.sr_BPV:  # steerRatio
+      self.ki.append( interp( sr_value, steerRatio, self.sR_lqr_kiV[nPos] ) )
+      self.scale.append( interp( sr_value, steerRatio, self.sR_lqr_scaleV[nPos] ) )
+      nPos += 1
+      if nPos > 10:
+        break
+
+    rt_ki = interp( v_ego_kph, self.sr_KPH, self.ki )
+    rt_scale  = interp( v_ego_kph, self.sr_KPH, self.scale )
+     
+    return rt_ki, rt_scale
+
+  def update(self, active, CS, CP, lat_plan, CC):
     lqr_log = log.ControlsState.LateralLQRState.new_message()
+
+    
+    atomTuning = CP.atomTuning
+    lateralsRatom = CP.lateralsRatom
 
     steers_max = get_steer_max(CP, CS.vEgo)
     torque_scale = (0.45 + CS.vEgo / 60.0)**2  # Scale actuator model with speed
 
     steering_angle = CS.steeringAngleDeg
 
+    v_ego_kph = CS.vEgo * CV.MS_TO_KPH
+
+    
+    if lateralsRatom.learnerParams == 3:
+      target_value = CC.model_speed
+      target_value = self.m_avg.get_avg( target_value, 5)
+    else:
+      target_value = CS.steeringAngleDeg
+      
+    self.ki, self.scale = self.atom_tune( v_ego_kph, target_value, CP )
     # Subtract offset. Zero angle should correspond to zero torque
     self.angle_steers_des = lat_plan.steeringAngleDeg - lat_plan.angleOffsetDeg
     steering_angle -= lat_plan.angleOffsetDeg

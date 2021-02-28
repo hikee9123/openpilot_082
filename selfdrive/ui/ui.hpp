@@ -75,14 +75,14 @@ typedef enum UIStatus {
 
 static std::map<UIStatus, NVGcolor> bg_colors = {
 #ifdef QCOM
-  {STATUS_OFFROAD, nvgRGBA(0x07, 0x23, 0x39, 0xf1)},
+  {STATUS_OFFROAD, nvgRGBA(0x07, 0x23, 0x39, 0xe1)},
 #else
-  {STATUS_OFFROAD, nvgRGBA(0x0, 0x0, 0x0, 0xff)},
+  {STATUS_OFFROAD, nvgRGBA(0x0, 0x0, 0x0, 0xef)},
 #endif
   {STATUS_DISENGAGED, nvgRGBA(0x17, 0x33, 0x49, 0xc8)},
-  {STATUS_ENGAGED, nvgRGBA(0x17, 0x86, 0x44, 0xf1)},
-  {STATUS_WARNING, nvgRGBA(0xDA, 0x6F, 0x25, 0xf1)},
-  {STATUS_ALERT, nvgRGBA(0xC9, 0x22, 0x31, 0xf1)},
+  {STATUS_ENGAGED, nvgRGBA(0x17, 0x86, 0x44, 0x51)},
+  {STATUS_WARNING, nvgRGBA(0xDA, 0x6F, 0x25, 0x51)},
+  {STATUS_ALERT, nvgRGBA(0xC9, 0x22, 0x31, 0xe1)},
 };
 
 typedef struct {
@@ -131,6 +131,23 @@ typedef struct UIScene {
 
   // lead
   vertex_data lead_vertices[2];
+
+  // atom
+  int  dash_menu_no;
+  cereal::FrameData::Reader   frame;
+  cereal::CarControl::Reader carControl;
+  cereal::LateralPlan::Reader lateralPlan;
+  cereal::LiveParametersData::Reader   liveParameters;
+
+
+  cereal::GpsLocationData::Reader   gpsLocationExternal;
+
+
+  struct _STATUS_
+  {
+      char text1[512];
+      char text2[512];
+  } alert;
 } UIScene;
 
 typedef struct UIState {
@@ -176,6 +193,10 @@ typedef struct UIState {
   bool sidebar_collapsed;
   Rect video_rect, viz_rect;
   float car_space_transform[6];
+
+
+  int   nFrame30;
+  int   nTimer;
 } UIState;
 
 void ui_init(UIState *s);

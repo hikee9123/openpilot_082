@@ -348,3 +348,13 @@ class Android(HardwareBase):
 
   def get_thermal_config(self):
     return ThermalConfig(cpu=((5, 7, 10, 12), 10), gpu=((16,), 10), mem=(2, 10), bat=(29, 1000), ambient=(25, 1))
+
+
+  def get_ip_address(self):
+
+    try:
+      wlan = subprocess.check_output(["ifconfig", "wlan0"], encoding='utf8').strip()
+      pattern = re.compile(r'inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
+      return pattern.search(wlan).group(1)
+    except Exception:
+      return "--"

@@ -13,6 +13,7 @@
 #include "ui.hpp"
 #include "paint.hpp"
 #include "android/sl_sound.hpp"
+#include "dashcam.h"
 
 ExitHandler do_exit;
 static void ui_set_brightness(UIState *s, int brightness) {
@@ -140,20 +141,34 @@ int main(int argc, char* argv[]) {
   const int MAX_VOLUME = LEON ? 15 : 12;
   s->sound->setVolume(MIN_VOLUME);
 
+   s->nTimer = 0;
+   s->nFrame30 = 0;
+
   while (!do_exit) {
     if (!s->started) {
       util::sleep_for(50);
     }
     double u1 = millis_since_boot();
-
+    // parameter Read.
+    s->nFrame30++;
+    if( s->nFrame30 > 8 )
+    {
+      s->nTimer++;
+      s->nFrame30 = 0;
+    }
     ui_update(s);
 
     // poll for touch events
     int touch_x = -1, touch_y = -1;
     int touched = touch_poll(&touch, &touch_x, &touch_y, 0);
     if (touched == 1) {
-      handle_sidebar_touch(s, touch_x, touch_y);
-      handle_vision_touch(s, touch_x, touch_y);
+      if( touch_x  < 300 )
+      {
+        handle_sidebar_touch(s, touch_x, touch_y);
+        handle_vision_touch(s, touch_x, touch_y);
+      }
+
+      printf("touched x,y: (%d,%d)\n", touch_x, touch_y);
     }
 
     // Don't waste resources on drawing in case screen is off
@@ -172,6 +187,7 @@ int main(int argc, char* argv[]) {
 
     update_offroad_layout_state(s, pm);
 
+    dashcam(s, touch_x, touch_y, touched );
     ui_draw(s);
     double u2 = millis_since_boot();
     if (!s->scene.frontview && (u2-u1 > 66)) {

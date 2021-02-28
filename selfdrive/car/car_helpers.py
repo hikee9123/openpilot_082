@@ -9,6 +9,7 @@ from selfdrive.hardware import EON
 from selfdrive.swaglog import cloudlog
 import cereal.messaging as messaging
 from selfdrive.car import gen_empty_fingerprint
+from selfdrive.car.hyundai.values import CAR
 
 from cereal import car
 EventName = car.CarEvent.EventName
@@ -116,7 +117,7 @@ def fingerprint(logcan, sendcan):
   Params().put("CarVin", vin)
 
   finger = gen_empty_fingerprint()
-  candidate_cars = {i: all_known_cars() for i in [0, 1]}  # attempt fingerprint on both bus 0 and 1
+  candidate_cars = {i: all_known_cars() for i in [0]}  # attempt fingerprint on bus 0 only
   frame = 0
   frame_fingerprint = 10  # 0.1s
   car_fingerprint = None
@@ -175,7 +176,8 @@ def get_car(logcan, sendcan):
 
   if candidate is None:
     cloudlog.warning("car doesn't match any fingerprints: %r", fingerprints)
-    candidate = "mock"
+    #candidate = "mock"
+    candidate = CAR.GRANDEUR_HEV_19
 
   CarInterface, CarController, CarState = interfaces[candidate]
   car_params = CarInterface.get_params(candidate, fingerprints, car_fw)

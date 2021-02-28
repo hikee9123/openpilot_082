@@ -433,8 +433,21 @@ def manager_thread():
   cloudlog.info("manager start")
   cloudlog.info({"environ": os.environ})
 
-  # save boot log
-  subprocess.call("./bootlog", cwd=os.path.join(BASEDIR, "selfdrive/loggerd"))
+  params = Params()
+  EnableLogger = int(params.get("RecordFront"))
+  
+  if not EnableLogger:
+    car_started_processes.remove( 'loggerd' )
+    car_started_processes.remove( 'logcatd' )
+    persistent_processes.remove( 'logmessaged' )
+    persistent_processes.remove( 'uploader' )
+    persistent_processes.remove( 'updated' )
+    persistent_processes.remove( 'deleter' )
+    persistent_processes.remove('tombstoned')
+  else:
+    # save boot log
+    subprocess.call(["./loggerd", "--bootlog"], cwd=os.path.join(BASEDIR, "selfdrive/loggerd")) 
+
 
   # start daemon processes
   for p in daemon_processes:
@@ -458,7 +471,7 @@ def manager_thread():
 
   started_prev = False
   logger_dead = False
-  params = Params()
+  #params = Params()
   device_state_sock = messaging.sub_sock('deviceState')
   pm = messaging.PubMaster(['managerState'])
 
