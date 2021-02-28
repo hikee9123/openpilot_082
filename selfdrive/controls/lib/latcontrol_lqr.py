@@ -46,7 +46,7 @@ class LatControlLQR():
     return self.sat_count > self.sat_limit
 
 
-  def atom_tune( self, v_ego_kph, sr_value, CP ):  # Á¶Çâ°¢¿¡ µû¸¥ º¯È­.
+  def atom_tune( self, v_ego_kph, sr_value, CP ):  # ï¿½ï¿½ï¿½â°¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­.
     self.sr_KPH = CP.atomTuning.sRKPH
     self.sr_BPV = CP.atomTuning.sRBPV
     self.sR_lqr_kiV  = CP.atomTuning.sRlqrkiV
@@ -68,7 +68,7 @@ class LatControlLQR():
      
     return rt_ki, rt_scale
 
-  def update(self, active, CS, CP, lat_plan, CC):
+  def update(self, active, CS, CP, lat_plan, model_speed):
     lqr_log = log.ControlsState.LateralLQRState.new_message()
 
     
@@ -84,8 +84,7 @@ class LatControlLQR():
 
     
     if lateralsRatom.learnerParams == 3:
-      target_value = CC.model_speed
-      target_value = self.m_avg.get_avg( target_value, 5)
+      target_value = self.m_avg.get_avg( model_speed, 5)
     else:
       target_value = CS.steeringAngleDeg
       

@@ -27,7 +27,7 @@ class LatControlPID():
     self.pid.reset()
 
 
-  def atom_tune( self, v_ego_kph, sr_value, CP ):  # Á¶Çâ°¢¿¡ µû¸¥ º¯È­.
+  def atom_tune( self, v_ego_kph, sr_value, CP ):  # ï¿½ï¿½ï¿½â°¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­.
     self.sr_KPH = CP.atomTuning.sRKPH
     self.sr_BPV = CP.atomTuning.sRBPV
 
@@ -59,13 +59,13 @@ class LatControlPID():
     #rt_Kp  = interp( v_ego_kph, self.sr_KPH, self.Kp )
     return self.MsV, self.KiV, self.KpV, self.KdV
 
-  def linear2_tune( self, CS, CP ):  # angle(Á¶Çâ°¢¿¡ ÀÇÇÑ º¯È­)
+  def linear2_tune( self, CS, CP ):  # angle(ï¿½ï¿½ï¿½â°¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­)
     v_ego_kph = CS.vEgo * CV.MS_TO_KPH
     sr_value = self.angle_steers_des
     MsV, KiV, KpV, KdV = self.atom_tune( v_ego_kph, sr_value, CP )
     self.pid.gain( (MsV, KpV), (MsV, KiV), (MsV, KdV), k_f=CP.lateralTuning.pid.kf )
 
-  def update(self, active, CS, CP, lat_plan, CC):
+  def update(self, active, CS, CP, lat_plan, model_speed):
     self.angle_steers_des = lat_plan.steeringAngleDeg  # get from MPC/PathPlanner
     self.deadzone = CP.lateralsRatom.deadzone
     self.linear2_tune( CS, CP )
