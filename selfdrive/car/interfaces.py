@@ -101,8 +101,8 @@ class CarInterfaceBase():
     ret.atomTuning.sRpidKpV      = [[0.25]]
     ret.atomTuning.sRpidKiV      = [[0.02]]
     ret.atomTuning.sRpidKdV      = [[1.5]]
-    ret.atomTuning.sRsteerRatioV = [[13.95]]
-    ret.atomTuning.sRsteerActuatorDelayV = [[0.1]]
+    ret.atomTuning.cvsteerRatioV = [[13.95]]
+    ret.atomTuning.cvsteerActuatorDelayV = [[0.1]]
   
     ret.lateralsRatom.deadzone = 0.1
     ret.lateralsRatom.steerOffset = 0

@@ -437,13 +437,13 @@ struct CarParams {
     cvsdDnV @4 :List(List(Float32));
     sRKPH @5 :List(Float32);
     sRBPV @6 :List(List(Float32));
-    sRsteerRatioV @7 :List(List(Float32));
+    cvsteerRatioV @7 :List(List(Float32));
     sRlqrkiV @8 :List(List(Float32));
     sRlqrscaleV @9 :List(List(Float32));
     sRpidKdV @10 :List(List(Float32));
     sRpidKiV @11 :List(List(Float32));
     sRpidKpV @12 :List(List(Float32));
-    sRsteerActuatorDelayV @13 :List(List(Float32));
+    cvsteerActuatorDelayV @13 :List(List(Float32));
   }
 
 

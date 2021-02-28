@@ -17,28 +17,24 @@ class LatControlPID():
     self.deadzone = CP.lateralsRatom.deadzone    
     self.pid = PIController((CP.lateralTuning.pid.kpBP, CP.lateralTuning.pid.kpV),
                             (CP.lateralTuning.pid.kiBP, CP.lateralTuning.pid.kiV),
-                            (CP.lateralTuning.pid.kdBP, CP.lateralTuning.pid.kdV),
                             k_f=CP.lateralTuning.pid.kf, pos_limit=1.0, neg_limit=-1.0,
                             sat_limit=CP.steerLimitTimer)
     self.angle_steers_des = 0.
-    self.new_kf_tuned = False
 
   def reset(self):
     self.pid.reset()
 
 
-  def atom_tune( self, v_ego_kph, sr_value, CP ):  # ���Ⱒ�� ���� ��ȭ.
+  def atom_tune( self, v_ego_kph, sr_value, CP ):
     self.sr_KPH = CP.atomTuning.sRKPH
     self.sr_BPV = CP.atomTuning.sRBPV
 
     self.sR_pid_KpV  = CP.atomTuning.sRpidKpV
     self.sR_pid_KiV  = CP.atomTuning.sRpidKiV
-    self.sR_pid_KdV  = CP.atomTuning.sRpidKdV
+
 
     self.KpV = []
     self.KiV = []    
-    self.KdV = []
-
 
     self.MsV = []
 
@@ -46,7 +42,6 @@ class LatControlPID():
     for angle in self.sr_BPV:  # angle
       self.KpV.append( interp( sr_value, angle, self.sR_pid_KpV[nPos] ) )
       self.KiV.append( interp( sr_value, angle, self.sR_pid_KiV[nPos] ) )
-      self.KdV.append( interp( sr_value, angle, self.sR_pid_KdV[nPos] ) )
 
       nPos += 1
       if nPos > 10:
@@ -57,13 +52,13 @@ class LatControlPID():
 
     #rt_Ki = interp( v_ego_kph, self.sr_KPH, self.Ki )
     #rt_Kp  = interp( v_ego_kph, self.sr_KPH, self.Kp )
-    return self.MsV, self.KiV, self.KpV, self.KdV
+    return self.MsV, self.KiV, self.KpV
 
-  def linear2_tune( self, CS, CP ):  # angle(���Ⱒ�� ���� ��ȭ)
+  def linear2_tune( self, CS, CP ):
     v_ego_kph = CS.vEgo * CV.MS_TO_KPH
     sr_value = self.angle_steers_des
-    MsV, KiV, KpV, KdV = self.atom_tune( v_ego_kph, sr_value, CP )
-    self.pid.gain( (MsV, KpV), (MsV, KiV), (MsV, KdV), k_f=CP.lateralTuning.pid.kf )
+    MsV, KiV, KpV = self.atom_tune( v_ego_kph, sr_value, CP )
+    self.pid.gain( (MsV, KpV), (MsV, KiV), k_f=CP.lateralTuning.pid.kf )
 
   def update(self, active, CS, CP, lat_plan):
     self.angle_steers_des = lat_plan.steeringAngleDeg  # get from MPC/PathPlanner
@@ -88,11 +83,7 @@ class LatControlPID():
       if CP.steerControlType == car.CarParams.SteerControlType.torque:
         # TODO: feedforward something based on lat_plan.rateSteers
         steer_feedforward -= lat_plan.angleOffsetDeg # subtract the offset, since it does not contribute to resistive torque
-        if self.new_kf_tuned:
-          _c1, _c2, _c3 = 0.35189607550172824, 7.506201251644202, 69.226826411091
-          steer_feedforward *= _c1 * CS.vEgo**2 + _c2*CS.vEgo + _c3
-        else:        
-          steer_feedforward *= CS.vEgo**2  # proportional to realigning tire momentum (~ lateral accel)
+        steer_feedforward *= CS.vEgo**2  # proportional to realigning tire momentum (~ lateral accel)
       deadzone = self.deadzone
 
       check_saturation = (CS.vEgo > 10) and not CS.steeringRateLimited and not CS.steeringPressed

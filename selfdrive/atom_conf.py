@@ -8,8 +8,8 @@ class AtomConf():
     self.tun_type   = 'lqr'
     self.sR_KPH         = [0]   # Speed  kph
     self.sR_BPV         = [[0]]
-    self.sR_steerRatioV = [[13.85]]
-    self.sR_ActuatorDelayV = [[0.1]]
+    self.cv_steerRatioV = [[13.85]]
+    self.cv_ActuatorDelayV = [[0.1]]
 
     self.sR_pid_KdV     = [[1.0]]
     self.sR_pid_KiV     = [[0.01]]
@@ -17,12 +17,12 @@ class AtomConf():
     self.sR_pid_deadzone  = 0.1
 
     self.sR_lqr_kiV     = [[0.01]]
-    self.sR_lqr_scaleV  = [[2000]]
+    self.sR_lqr_scaleV  = [[1700]]
 
     self.cv_KPH    = [0.]   # Speed  kph
     self.cv_BPV    = [[200, 255]]  # CV
     self.cv_sMaxV  = [[384, 255]]
-    self.cv_sdUPV  = [[3,2]]
+    self.cv_sdUPV  = [[3,1]]
     self.cv_sdDNV  = [[7,1]]
 
     self.steerOffset = 0.0
@@ -45,8 +45,8 @@ class AtomConf():
     self.tun_type   = conf['tun_type']
     self.sR_KPH   = conf['sR_KPH']
     self.sR_BPV  = conf['sR_BPV']
-    self.sR_steerRatioV  = conf['sR_steerRatioV']
-    self.sR_ActuatorDelayV = conf['sR_ActuatorDelayV'] 
+    self.cv_steerRatioV  = conf['cv_steerRatioV']
+    self.cv_ActuatorDelayV = conf['cv_ActuatorDelayV'] 
 
     self.sR_pid_KdV  = conf['sR_pid_KdV'] 
     self.sR_pid_KiV  = conf['sR_pid_KiV']

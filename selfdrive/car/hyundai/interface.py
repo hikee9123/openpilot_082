@@ -299,7 +299,6 @@ class CarInterface(CarInterfaceBase):
       #ret.lateralTuning.lqr.k = [-100., 450.]
       #ret.lateralTuning.lqr.l = [0.22, 0.318]
       #ret.lateralTuning.lqr.dcGain = 0.003
-
       ret.lateralTuning.lqr.k = [-110., 451.]
       ret.lateralTuning.lqr.l = [0.33, 0.318]
       ret.lateralTuning.lqr.dcGain = 0.0027
@@ -310,6 +309,9 @@ class CarInterface(CarInterfaceBase):
     ret.atomTuning.cvsMaxV  = ATOMC.cv_sMaxV
     ret.atomTuning.cvsdUpV  = ATOMC.cv_sdUPV
     ret.atomTuning.cvsdDnV  = ATOMC.cv_sdDNV
+
+    ret.atomTuning.cvsteerRatioV = ATOMC.cv_steerRatioV
+    ret.atomTuning.cvsteerActuatorDelayV = ATOMC.cv_ActuatorDelayV    
     
     ret.atomTuning.sRKPH     = ATOMC.sR_KPH
     ret.atomTuning.sRBPV     = ATOMC.sR_BPV
@@ -323,8 +325,7 @@ class CarInterface(CarInterfaceBase):
     ret.atomTuning.sRpidKiV      = ATOMC.sR_pid_KiV
     ret.atomTuning.sRpidKdV      = ATOMC.sR_pid_KdV
 
-    ret.atomTuning.sRsteerRatioV = ATOMC.sR_steerRatioV
-    ret.atomTuning.sRsteerActuatorDelayV = ATOMC.sR_ActuatorDelayV
+
   
     ret.lateralsRatom.deadzone = ATOMC.sR_pid_deadzone
     ret.lateralsRatom.steerOffset = ATOMC.steerOffset
@@ -386,8 +387,8 @@ class CarInterface(CarInterfaceBase):
     CP.atomTuning.sRpidKiV      = ATOMC.sR_pid_KiV
     CP.atomTuning.sRpidKdV      = ATOMC.sR_pid_KdV
 
-    CP.atomTuning.sRsteerRatioV = ATOMC.sR_steerRatioV
-    CP.atomTuning.sRsteerActuatorDelayV = ATOMC.sR_ActuatorDelayV
+    CP.atomTuning.cvsteerRatioV = ATOMC.cv_steerRatioV
+    CP.atomTuning.cvsteerActuatorDelayV = ATOMC.cv_ActuatorDelayV
     
 
     CP.lateralsRatom.deadzone = ATOMC.sR_pid_deadzone      # OK

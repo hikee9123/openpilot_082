@@ -135,12 +135,12 @@ class LateralPlanner():
   def atom_tune( self, v_ego_kph, sr_value,  atomTuning ):  
     self.sr_KPH = atomTuning.cvKPH
     self.sr_BPV = atomTuning.cvBPV
-    self.sr_steerRatioV = atomTuning.sRsteerRatioV
+    self.cv_steerRatioV = atomTuning.cvsteerRatioV
     self.sr_SteerRatio = []
 
     nPos = 0
     for steerRatio in self.sr_BPV:  # steerRatio
-      self.sr_SteerRatio.append( interp( sr_value, steerRatio, self.sr_steerRatioV[nPos] ) )
+      self.sr_SteerRatio.append( interp( sr_value, steerRatio, self.cv_steerRatioV[nPos] ) )
       nPos += 1
       if nPos > 20:
         break
@@ -152,12 +152,12 @@ class LateralPlanner():
   def atom_actuatorDelay( self, v_ego_kph, sr_value, atomTuning ):
     self.sr_KPH = atomTuning.cvKPH
     self.sr_BPV = atomTuning.cvBPV
-    self.sr_ActuatorDelayV = atomTuning.sRsteerActuatorDelayV
+    self.cv_ActuatorDelayV = atomTuning.cvsteerActuatorDelayV
     self.sr_ActuatorDelay = []
 
     nPos = 0
     for steerRatio in self.sr_BPV:
-      self.sr_ActuatorDelay.append( interp( sr_value, steerRatio, self.sr_ActuatorDelayV[nPos] ) )
+      self.sr_ActuatorDelay.append( interp( sr_value, steerRatio, self.cv_ActuatorDelayV[nPos] ) )
       nPos += 1
       if nPos > 10:
         break

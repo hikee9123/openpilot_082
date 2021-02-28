@@ -163,7 +163,7 @@ class CarController():
       param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, nUP)
       param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, nDN )
 
-    sec_mval = 2.0  # 오파 => 운전자.  (sec)
+    sec_mval = 5  # 오파 => 운전자.  (sec)
     sec_pval = 3 #  운전자 => 오파  (sec)
     # streer over check
 

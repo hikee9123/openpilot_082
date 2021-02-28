@@ -11,10 +11,9 @@ def apply_deadzone(error, deadzone):
   return error
 
 class PIController():
-  def __init__(self, k_p, k_i, k_d, k_f=1., pos_limit=None, neg_limit=None, rate=100, sat_limit=0.8, convert=None):
+  def __init__(self, k_p, k_i, k_f=1., pos_limit=None, neg_limit=None, rate=100, sat_limit=0.8, convert=None):
     self._k_p = k_p  # proportional gain
     self._k_i = k_i  # integral gain
-    self._k_d = k_d  # derivative gain
     self.k_f = k_f  # feedforward gain
 
     self.pos_limit = pos_limit
@@ -28,7 +27,6 @@ class PIController():
 
     self.reset()
 
-
   @property
   def k_p(self):
     return interp(self.speed, self._k_p[0], self._k_p[1])
@@ -36,11 +34,6 @@ class PIController():
   @property
   def k_i(self):
     return interp(self.speed, self._k_i[0], self._k_i[1])
-
-
-  @property
-  def k_d(self):
-    return interp(self.speed, self._k_d[0], self._k_d[1])    
 
   def _check_saturation(self, control, check_saturation, error):
     saturated = (control < self.neg_limit) or (control > self.pos_limit)
@@ -57,16 +50,14 @@ class PIController():
   def reset(self):
     self.p = 0.0
     self.i = 0.0
-    self.d = 0.0
     self.f = 0.0
     self.sat_count = 0.0
     self.saturated = False
     self.control = 0
 
-  def gain(self, k_p, k_i, k_d, k_f ):
+  def gain(self, k_p, k_i,  k_f ):
     self._k_p = k_p # proportional gain
     self._k_i = k_i # integral gain
-    self._k_d = k_d  # derivative gain    
     self.k_f = k_f  # feedforward gain    
 
   def update(self, setpoint, measurement, speed=0.0, check_saturation=True, override=False, feedforward=0., deadzone=0., freeze_integrator=False):
@@ -76,16 +67,11 @@ class PIController():
     self.p = error * self.k_p
     self.f = feedforward * self.k_f
 
-    self.d = 0
-    if len(self.errors) >= 5:  # makes sure list is long enough
-      self.d = (error - self.errors[-5]) / 5  # get deriv in terms of 100hz (tune scale doesn't change)
-      self.d *= self.k_d
-
     if override:
       self.i -= self.i_unwind_rate * float(np.sign(self.i))
     else:
       i = self.i + error * self.k_i * self.i_rate
-      control = self.p + self.f + i + self.d
+      control = self.p + self.f + i
 
       if self.convert is not None:
         control = self.convert(control, speed=self.speed)
@@ -97,7 +83,7 @@ class PIController():
          not freeze_integrator:
         self.i = i
 
-    control = self.p + self.f + self.i + self.d
+    control = self.p + self.f + self.i
     if self.convert is not None:
       control = self.convert(control, speed=self.speed)
 
