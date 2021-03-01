@@ -44,11 +44,10 @@ class AtomConf():
     self.tun_type   = conf['tun_type']
     self.sR_KPH   = conf['sR_KPH']
     self.sR_BPV  = conf['sR_BPV']
-    self.cv_steerRatioV  = conf['cv_steerRatioV']
-    self.cv_ActuatorDelayV = conf['cv_ActuatorDelayV'] 
 
-    self.sR_pid_KiV  = conf['sR_pid_KiV']
+
     self.sR_pid_KpV  = conf['sR_pid_KpV']
+    self.sR_pid_KiV  = conf['sR_pid_KiV']
     self.sR_pid_deadzone  = conf['sR_pid_deadzone']
 
     self.sR_lqr_kiV  = conf['sR_lqr_kiV']
@@ -59,6 +58,9 @@ class AtomConf():
     self.cv_sMaxV  = conf['cv_sMaxV']
     self.cv_sdUPV  = conf['cv_sdUPV']
     self.cv_sdDNV = conf['cv_sdDNV']
+    self.cv_steerRatioV  = conf['cv_steerRatioV']
+    self.cv_ActuatorDelayV = conf['cv_ActuatorDelayV'] 
+
     self.steerOffset = conf['steerOffset']
     self.steerRateCost = conf['steerRateCost']
     self.steerLimitTimer = conf['steerLimitTimer']
