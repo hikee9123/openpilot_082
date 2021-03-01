@@ -242,7 +242,7 @@ class LateralPlanner():
                         (steeringTorque < 0 and self.lane_change_direction == LaneChangeDirection.right))
 
       # auto
-      if torque_applied or self.lan_change_tiemr < LANE_CHANGE_AUTO_TIME:
+      if torque_applied or self.lane_change_timer < LANE_CHANGE_AUTO_TIME:
         pass
       elif self.lane_change_direction == LaneChangeDirection.left:
         if ll_probs[0] > 0.5:
