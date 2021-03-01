@@ -224,12 +224,21 @@ class SpdController():
     def get_lead( sm ):
         dRel = 150
         vRel = 0
+        
+        lead = sm['radarState'].leadOne
+        if lead.status:
+            dRel = lead.dRel
+            vRel = lead.vRel * CV.MS_TO_KPH + 0.5
+        else:
+            dRel = 150
+            vRel = 0
 
-        if len(sm['modelV2'].leads) > 0:
-            lead_msg = sm['modelV2'].leads[0]
-            if lead_msg.prob > 0.5:
-                dRel = float(lead_msg.xyva[0] - RADAR_TO_CAMERA)
-                vRel = float(lead_msg.xyva[2])
+
+        #if len(sm['modelV2'].leads) > 0:
+        #    lead_msg = sm['modelV2'].leads[0]
+        #    if lead_msg.prob > 0.5:
+        #        dRel = float(lead_msg.xyva[0] - RADAR_TO_CAMERA)
+        #        vRel = float(lead_msg.xyva[2])
 
 
         return dRel, vRel
@@ -242,7 +251,7 @@ class SpdController():
         delta_speed = CS.VSetDis - CS.clu_Vanz
         set_speed = int(CS.VSetDis) + add_val
         
-        if add_val > 0:  # 증�?
+        if add_val > 0:  # inc
             if delta_speed > safety_dis:
                 time = 100
         else:
@@ -309,7 +318,7 @@ class SpdController():
 
         if self.long_curv_timer < long_wait_cmd:
             pass
-        elif CS.driverOverride == 1:  # 가?�패?�에 ?�한 ?�도 ?�정.
+        elif CS.driverOverride == 1:  # acc
             if self.cruise_set_speed_kph > CS.clu_Vanz:
                 delta = int(CS.clu_Vanz) - int(CS.VSetDis)
                 if delta > 1:
