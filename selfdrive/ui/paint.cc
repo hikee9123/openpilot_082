@@ -334,6 +334,8 @@ static void ui_draw_debug(UIState *s)
   auto cruiseState = scene.car_state.getCruiseState();  
   int modeSel = cruiseState.getModeSel();
   float model_speed = scene.controls_state.getModelSpeed();
+
+  auto lane_line_probs = scene.modelDataV2.getLaneLineProbs()
  // float curvature = scene.controls_state.getCurvature();
 
   nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
@@ -351,7 +353,7 @@ static void ui_draw_debug(UIState *s)
     ui_print( s, x_pos, y_pos+100, "sF:%.2f CV:%.0f", stiffnessFactor, model_speed );
 
 
-    //ui_print( s, x_pos, y_pos+200, "prob:%.2f, %.2f, %.2f, %.2f", scene.lane_line_probs[0], scene.lane_line_probs[1], scene.lane_line_probs[2], scene.lane_line_probs[3] );
+    ui_print( s, x_pos, y_pos+200, "prob:%.2f, %.2f, %.2f, %.2f", lane_line_probs[0], lane_line_probs[1], lane_line_probs[2], lane_line_probs[3] );
     //ui_print( s, x_pos, y_pos+300, "edge:%.2f, %.2f", scene.road_edge_stds[0], scene.road_edge_stds[1] );
 
 

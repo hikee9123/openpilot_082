@@ -134,6 +134,7 @@ typedef struct UIScene {
 
   // atom
   int  dash_menu_no;
+  cereal::ModelDataV2::Reader modelDataV2;
   cereal::FrameData::Reader   frame;
   cereal::CarControl::Reader carControl;
   cereal::LateralPlan::Reader lateralPlan;
