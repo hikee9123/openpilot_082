@@ -28,7 +28,7 @@ class TestSpdCtrl:
 
 
       model_speed = self.SC.calc_va(  self.sm, 30  )
-      print( 'model_speed = {}  {}  {}'.format( model_speed, lane_lines, lane_line_probs) )
+      print( 'model_speed = {}   {}'.format( model_speed,  lane_line_probs) )
 
 
 class TestCarInterfaces(unittest.TestCase):
