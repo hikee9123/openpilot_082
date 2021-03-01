@@ -20,7 +20,7 @@ class TestSpdCtrl:
   def test(self):
       self.sm.update()
 
-      model = sm['modelV2']
+      model = self.sm['modelV2']
       lane_lines = model.laneLines
       lane_line_probs = model.laneLineProbs
 
