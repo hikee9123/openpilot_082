@@ -336,6 +336,7 @@ static void ui_draw_debug(UIState *s)
   float model_speed = scene.controls_state.getModelSpeed();
 
   auto lane_line_probs = scene.modelDataV2.getLaneLineProbs();
+  auto road_edge_stds = scene.modelDataV2.getRoadEdges();
  // float curvature = scene.controls_state.getCurvature();
 
   nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
@@ -351,13 +352,13 @@ static void ui_draw_debug(UIState *s)
     ui_print( s, x_pos, y_pos+0,   "sR:%.2f , %.2f  Fan:%.0f", steerRatio, planSteerRatio, fanSpeed/1000. );
     ui_print( s, x_pos, y_pos+50,  "aO:%.2f, %.2f", angleOffset, angleOffsetAverage );
     ui_print( s, x_pos, y_pos+100, "sF:%.2f CV:%.0f", stiffnessFactor, model_speed );
+   ui_print( s, x_pos, y_pos+150, "lW:%.2f  cpuPerc:%d", laneWidth, cpuPerc );
+
+    ui_print( s, x_pos, y_pos+250, "prob:%.2f, %.2f, %.2f, %.2f", lane_line_probs[0], lane_line_probs[1], lane_line_probs[2], lane_line_probs[3] );
+    ui_print( s, x_pos, y_pos+300, "edge:%.2f, %.2f", road_edge_stds[0], road_edge_stds[1] );
 
 
-    ui_print( s, x_pos, y_pos+200, "prob:%.2f, %.2f, %.2f, %.2f", lane_line_probs[0], lane_line_probs[1], lane_line_probs[2], lane_line_probs[3] );
-    //ui_print( s, x_pos, y_pos+300, "edge:%.2f, %.2f", scene.road_edge_stds[0], scene.road_edge_stds[1] );
-
-
-    ui_print( s, x_pos, y_pos+250, "lW:%.2f  cpuPerc:%d", laneWidth, cpuPerc );
+    
 
     //float  dPoly = scene.pathPlan.lPoly + scene.pathPlan.rPoly;
     //ui_print( s, x_pos, y_pos+300, "Poly:%.2f, %.2f = %.2f", scene.pathPlan.lPoly, scene.pathPlan.rPoly, dPoly );
