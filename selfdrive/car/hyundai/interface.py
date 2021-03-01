@@ -323,7 +323,7 @@ class CarInterface(CarInterfaceBase):
     # pid
     ret.atomTuning.sRpidKpV      = ATOMC.sR_pid_KpV
     ret.atomTuning.sRpidKiV      = ATOMC.sR_pid_KiV
-    ret.atomTuning.sRpidKdV      = ATOMC.sR_pid_KdV
+    #ret.atomTuning.sRpidKdV      = ATOMC.sR_pid_KdV
 
 
   
@@ -385,7 +385,7 @@ class CarInterface(CarInterfaceBase):
 
     CP.atomTuning.sRpidKpV      = ATOMC.sR_pid_KpV
     CP.atomTuning.sRpidKiV      = ATOMC.sR_pid_KiV
-    CP.atomTuning.sRpidKdV      = ATOMC.sR_pid_KdV
+    #CP.atomTuning.sRpidKdV      = ATOMC.sR_pid_KdV
 
     CP.atomTuning.cvsteerRatioV = ATOMC.cv_steerRatioV
     CP.atomTuning.cvsteerActuatorDelayV = ATOMC.cv_ActuatorDelayV
