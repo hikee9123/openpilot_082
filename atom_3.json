@@ -17,7 +17,7 @@
   "sR_pid_KpV": [[0.2],[0.20,0.15,0.20]],
   "sR_pid_KiV": [[0.01],[0.02,0.02,0.02]],
   "sR_pid_deadzone": 0.0,
-  "steerLimitTimer": 0.8,
+  "steerLimitTimer": 0.7,
   "steerOffset": 0.0,
   "steerRateCost": 1.0,
   "cameraOffset": 0.00
