@@ -385,7 +385,6 @@ class CarInterface(CarInterfaceBase):
 
     CP.atomTuning.sRpidKpV      = ATOMC.sR_pid_KpV
     CP.atomTuning.sRpidKiV      = ATOMC.sR_pid_KiV
-    #CP.atomTuning.sRpidKdV      = ATOMC.sR_pid_KdV
 
     CP.atomTuning.cvsteerRatioV = ATOMC.cv_steerRatioV
     CP.atomTuning.cvsteerActuatorDelayV = ATOMC.cv_ActuatorDelayV
@@ -426,10 +425,6 @@ class CarInterface(CarInterfaceBase):
       #  self.meg_name = EventName.invalidLkasSetting
       elif ret.cruiseState.standstill:
         self.meg_name = EventName.resumeRequired
-      elif self.CC.lane_change_torque_lower == 3:
-        self.meg_name = EventName.emgButtonManual        
-      elif self.CC.lane_change_torque_lower:
-        self.meg_name = EventName.laneChangeManual
       elif self.CC.steer_torque_over_timer and self.CC.steer_torque_ratio < 0.1:
         self.meg_name = EventName.steerTorqueOver
       elif self.CC.steer_torque_ratio < 0.5 and self.CS.clu_Vanz > 5:

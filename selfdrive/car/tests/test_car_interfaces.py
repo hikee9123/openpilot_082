@@ -19,8 +19,16 @@ class TestSpdCtrl:
 
   def test(self):
       self.sm.update()
+
+      model = sm['modelV2']
+      lane_lines = model.laneLines
+      lane_line_probs = model.laneLineProbs
+
+
+
+
       model_speed = self.SC.calc_va(  self.sm, 30  )
-      print( 'model_speed = {}'.format( model_speed) )
+      print( 'model_speed = {}  {}  {}'.format( model_speed, lane_lines, lane_line_probs) )
 
 
 class TestCarInterfaces(unittest.TestCase):

@@ -40,7 +40,7 @@ class CarController():
 
 
     self.nBlinker = 0
-    self.lane_change_torque_lower = 0
+    #self.lane_change_torque_lower = 0
     self.steer_torque_over_timer = 0
     self.steer_torque_ratio = 1
     self.steer_torque_ratio_dir = 1

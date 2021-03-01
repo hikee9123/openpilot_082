@@ -453,27 +453,10 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   },
 
 
-  EventName.laneChangeManual: {
-    ET.WARNING: Alert(
-      "Steer Manual Lane Change",
-      "Monitor Other Vehicles",
-      AlertStatus.userPrompt, AlertSize.mid,
-      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.none, .0, .1, .1, alert_rate=0.75),
-  },
-
-  EventName.emgButtonManual: {
-    ET.WARNING: Alert(
-      "TAKE CONTROL",
-      "비상 점멸등 작동중",
-      AlertStatus.userPrompt, AlertSize.mid,
-      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.none, .0, .1, .1, alert_rate=0.75),
-  },  
-
-
     EventName.steerTorqueOver: {
     ET.WARNING: Alert(
       "TAKE CONTROL",
-      "자동 조향 일시 중지",
+      "Auto-Steering Pauses",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimePrompt, 0, 0, .3),
   },
@@ -481,7 +464,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   EventName.steerTorqueLow: {
     ET.WARNING: Alert(
       "TAKE CONTROL",
-      "자동 조향 일시 저하",
+      "Temporarily Degraded Auto-Steering",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimePrompt, 0., 0., .1),
   },
