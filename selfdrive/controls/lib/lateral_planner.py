@@ -25,6 +25,7 @@ LOG_MPC = os.environ.get('LOG_MPC', False)
 
 LANE_CHANGE_SPEED_MIN = 30 * CV.KPH_TO_MS
 LANE_CHANGE_TIME_MAX = 10.
+LANE_CHANGE_AUTO_TIME = 1.5
 DST_ANGLE_LIMIT = 7.
 
 DESIRES = {
@@ -219,6 +220,10 @@ class LateralPlanner():
       self.t_idxs = np.array(md.position.t)
       self.plan_yaw = list(md.orientation.z)
 
+
+    ll_probs = md.laneLineProbs   # 0,1,2,3
+    re_stds = md.roadEdges   # 0,1
+
     # Lane change logic
     one_blinker = sm['carState'].leftBlinker != sm['carState'].rightBlinker
     below_lane_change_speed = v_ego < LANE_CHANGE_SPEED_MIN
@@ -235,6 +240,17 @@ class LateralPlanner():
       torque_applied = steeringPressed and \
                        ((steeringTorque > 0 and self.lane_change_direction == LaneChangeDirection.left) or
                         (steeringTorque < 0 and self.lane_change_direction == LaneChangeDirection.right))
+
+      # auto
+      if torque_applied or self.lan_change_tiemr < LANE_CHANGE_AUTO_TIME:
+        pass
+      elif self.lane_change_direction == LaneChangeDirection.left:
+        if ll_probs[0] > 0.5:
+          torque_applied = True
+      elif self.lane_change_direction == LaneChangeDirection.right:
+        if ll_probs[3] > 0.5:
+          torque_applied = True
+
 
       blindspot_detected = ((leftBlindspot and self.lane_change_direction == LaneChangeDirection.left) or
                             (rightBlindspot and self.lane_change_direction == LaneChangeDirection.right))
