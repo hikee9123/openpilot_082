@@ -174,7 +174,7 @@ class CarController():
       sec_mval = 0.5 # 오파 => 운전자.
       sec_pval = 10  # 운전자 => 오파  (sec)
 
-    if v_ego_kph > 5 and CS.out.steeringPressed and CS.out.cruiseState.enabled:  #����� �ڵ� ��ũ
+    if v_ego_kph > 5 and CS.out.steeringPressed and CS.out.cruiseState.enabled:
       if abs_angle_steers > 5 and CS.out.steeringTorque < -10:   #right
         if dst_steer < 0:
           self.steer_torque_over_timer = 0
