@@ -245,10 +245,10 @@ class LateralPlanner():
       if torque_applied or self.lane_change_timer < LANE_CHANGE_AUTO_TIME:
         pass
       elif self.lane_change_direction == LaneChangeDirection.left:
-        if ll_probs[0] > 0.5:
+        if ll_probs[3] > 0.5:
           torque_applied = True
       elif self.lane_change_direction == LaneChangeDirection.right:
-        if ll_probs[3] > 0.5:
+        if ll_probs[0] > 0.5:
           torque_applied = True
 
 
@@ -276,7 +276,7 @@ class LateralPlanner():
       # starting
       elif self.lane_change_state == LaneChangeState.laneChangeStarting:
         # fade out over .5s
-        xp = [40,70]
+        xp = [40,80]
         fp2 = [1,2]
         lane_time = interp( v_ego_kph, xp, fp2 )        
         self.lane_change_ll_prob = max(self.lane_change_ll_prob - lane_time*DT_MDL, 0.0)
@@ -293,7 +293,7 @@ class LateralPlanner():
         elif self.lane_change_ll_prob > 0.99:
           self.lane_change_state = LaneChangeState.off
 
-    if self.lane_change_state in [LaneChangeState.off, LaneChangeState.preLaneChange]:
+    if self.lane_change_state in [LaneChangeState.off]:
       self.lane_change_timer = 0.0
     else:
       self.lane_change_timer += DT_MDL
