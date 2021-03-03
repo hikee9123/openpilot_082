@@ -245,10 +245,10 @@ class LateralPlanner():
       if torque_applied or self.lane_change_timer < LANE_CHANGE_AUTO_TIME:
         pass
       elif self.lane_change_direction == LaneChangeDirection.left:
-        if ll_probs[3] > 0.5:
+        if ll_probs[0] > 0.5:
           torque_applied = True
       elif self.lane_change_direction == LaneChangeDirection.right:
-        if ll_probs[0] > 0.5:
+        if ll_probs[3] > 0.5:
           torque_applied = True
 
 
@@ -376,7 +376,7 @@ class LateralPlanner():
 
     elif v_ego_kph < 30:  # 30
       xp = [15,30]
-      fp2 = [3,5]
+      fp2 = [1,3]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.desired_steering_wheel_angle_deg = self.limit_ctrl( org_angle_steers_des, limit_steers, steering_wheel_angle_deg )
 
