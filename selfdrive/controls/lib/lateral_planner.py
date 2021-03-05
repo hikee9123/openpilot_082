@@ -245,10 +245,10 @@ class LateralPlanner():
       if torque_applied or self.lane_change_timer < LANE_CHANGE_AUTO_TIME:
         pass
       elif self.lane_change_direction == LaneChangeDirection.left:
-        if ll_probs[3] > 0.5:
+        if ll_probs[0] > 0.5:
           torque_applied = True
       elif self.lane_change_direction == LaneChangeDirection.right:
-        if ll_probs[0] > 0.5:
+        if ll_probs[3] > 0.5:
           torque_applied = True
 
 
@@ -325,7 +325,7 @@ class LateralPlanner():
     self.cur_state.curvature = interp(DT_MDL, self.t_idxs[:MPC_N+1], self.mpc_solution.curvature)
 
     # TODO this needs more thought, use .2s extra for now to estimate other delays
-    delay = CP.steerActuatorDelay + .2
+    delay = self.steerActuatorDelay + .2
     current_curvature = self.mpc_solution.curvature[0]
     psi = interp(delay, self.t_idxs[:MPC_N+1], self.mpc_solution.psi)
     next_curvature_rate = self.mpc_solution.curvature_rate[0]
@@ -376,7 +376,7 @@ class LateralPlanner():
 
     elif v_ego_kph < 30:  # 30
       xp = [15,30]
-      fp2 = [3,5]
+      fp2 = [1,3]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.desired_steering_wheel_angle_deg = self.limit_ctrl( org_angle_steers_des, limit_steers, steering_wheel_angle_deg )
 
