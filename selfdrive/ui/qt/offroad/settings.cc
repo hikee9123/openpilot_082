@@ -12,6 +12,7 @@
 
 #include "networking.hpp"
 #include "settings.hpp"
+#include "widgets/input.hpp"
 #include "widgets/toggle.hpp"
 #include "widgets/offroad_alerts.hpp"
 
@@ -153,7 +154,9 @@ QWidget * device_panel() {
   device_layout->addWidget(clear_cal_btn, 0, Qt::AlignBottom);
   device_layout->addWidget(horizontal_line(), Qt::AlignBottom);
   QObject::connect(clear_cal_btn, &QPushButton::released, [=]() {
-    Params().delete_db_value("CalibrationParams");
+    if (ConfirmationDialog::confirm("Are you sure you want to reset calibration?")) {
+      Params().delete_db_value("CalibrationParams");
+    }
   });
 
   QPushButton *poweroff_btn = new QPushButton("Power Off");
@@ -169,7 +172,11 @@ QWidget * device_panel() {
   // TODO: add confirmation dialog
   QPushButton *uninstall_btn = new QPushButton("Uninstall openpilot");
   device_layout->addWidget(uninstall_btn);
-  QObject::connect(uninstall_btn, &QPushButton::released, [=]() { Params().write_db_value("DoUninstall", "1"); });
+  QObject::connect(uninstall_btn, &QPushButton::released, [=]() {
+    if (ConfirmationDialog::confirm("Are you sure you want to uninstall?")) {
+      Params().write_db_value("DoUninstall", "1");
+    }
+  });
 
   QWidget *widget = new QWidget;
   widget->setLayout(device_layout);

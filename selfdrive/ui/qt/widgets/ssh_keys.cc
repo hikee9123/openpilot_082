@@ -6,7 +6,7 @@
 
 #include "common/params.h"
 #include "widgets/ssh_keys.hpp"
-#include "widgets/input_field.hpp"
+#include "widgets/input.hpp"
 
 SSH::SSH(QWidget* parent) : QWidget(parent){
   // init variables
