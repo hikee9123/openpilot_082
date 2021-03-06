@@ -25,7 +25,9 @@ class TestSpdCtrl:
       lane_line_probs = model.laneLineProbs
 
       curve_speed = self.SC.cal_curve_speed(  self.sm, 30, 10  )
-      model_speed = self.SC.cal_model_speed(  self.sm, 30  )
+      #model_speed = self.SC.cal_model_speed(  self.sm, 30  )
+      self.prob = list(model.path.poly)
+      model_speed = self.SC.calc_laneProb(  self.prob, 30  )
       print( 'model_speed = {}  curve_speed={} {}'.format( model_speed, curve_speed,  lane_line_probs) )
 
 
