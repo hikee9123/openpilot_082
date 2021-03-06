@@ -221,7 +221,7 @@ class CarController():
     path_plan = sm['lateralPlan']
     self.dRel, self.vRel = SpdController.get_lead( sm )
     if self.SC is not None:
-      self.model_speed = self.SC.calc_va(  sm, CS.out.vEgo  )
+      self.model_speed = self.SC.cal_model_speed(  sm, CS.out.vEgo  )
       self.curve_speed = self.SC.cal_curve_speed( sm, CS.out.vEgo, frame)
     else:
       self.model_speed =  0

@@ -169,7 +169,7 @@ class SpdController():
         return  model_speed
 
 
-    def calc_va(self, sm, v_ego):
+    def cal_model_speed(self, sm, v_ego):
         md = sm['modelV2']
         #print('{}'.format( md ) )
         if len(md.path.poly):
@@ -315,7 +315,7 @@ class SpdController():
         lead_wait_cmd, lead_set_speed = self.update_lead( CS,  dRel, vRel )  
 
         # 커브 감속.
-        model_speed = CC.model_speed   #calc_va( CS.out.vEgo )
+        model_speed = CC.model_speed   #cal_model_speed( CS.out.vEgo )
         curv_wait_cmd, curv_set_speed = self.update_curv(CS, sm, model_speed)
 
         if curv_wait_cmd != 0:
