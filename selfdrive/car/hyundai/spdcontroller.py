@@ -106,6 +106,7 @@ class SpdController():
         self.old_model_init = 0
 
         self.curve_speed = 0
+        self.curvature_gain = 0.9
         
 
     def reset(self):
