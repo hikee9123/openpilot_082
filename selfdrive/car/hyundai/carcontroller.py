@@ -51,6 +51,7 @@ class CarController():
     self.movAvg = moveavg1.MoveAvg()
     self.timer1 = tm.CTime1000("time")
     self.model_speed = 0
+    self.curve_speed = 0
 
     
     # hud
@@ -221,8 +222,10 @@ class CarController():
     self.dRel, self.vRel = SpdController.get_lead( sm )
     if self.SC is not None:
       self.model_speed = self.SC.calc_va(  sm, CS.out.vEgo  )
+      self.curve_speed = self.SC.cal_curve_speed( sm, CS.out.vEgo, frame)
     else:
       self.model_speed =  0
+      self.curve_speed = 0
 
 
     # Steering Torque
@@ -269,7 +272,7 @@ class CarController():
 
     run_speed_ctrl = CS.acc_active and self.SC != None
     if not run_speed_ctrl:
-      str_log2 = 'LKAS={:.0f}  steer={:5.0f} d={:.0f} v={:.0f}'.format(  CS.lkas_button_on,  CS.out.steeringTorque, self.dRel, self.vRel  )
+      str_log2 = 'CS={:.0f} LKAS={:.0f}  steer={:5.0f}'.format( self.curve_speed,  CS.lkas_button_on,  CS.out.steeringTorque )
       trace1.printf2( '{}'.format( str_log2 ) )
 
 

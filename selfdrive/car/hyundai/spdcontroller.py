@@ -10,7 +10,7 @@ import cereal.messaging as messaging
 from selfdrive.config import Conversions as CV
 from selfdrive.controls.lib.speed_smoother import speed_smoother
 from selfdrive.controls.lib.long_mpc import LongitudinalMpc
-
+from selfdrive.controls.lib.lane_planner import TRAJECTORY_SIZE
 from selfdrive.car.hyundai.values import Buttons
 from common.numpy_fast import clip, interp
 
@@ -25,6 +25,7 @@ import common.MoveAvg as moveavg1
 
 
 MAX_SPEED = 255.0
+MIN_CURVE_SPEED = 32.
 
 LON_MPC_STEP = 0.2  # first step is 0.2s
 MAX_SPEED_ERROR = 2.0
@@ -104,7 +105,7 @@ class SpdController():
         self.old_model_speed = 0
         self.old_model_init = 0
 
-
+        self.curve_speed = 0
         
 
     def reset(self):
@@ -112,6 +113,29 @@ class SpdController():
         self.a_model = 0
         self.v_cruise = 0
         self.a_cruise = 0
+
+
+
+    def cal_curve_speed(self, sm, v_ego, frame):
+        if frame % 10 == 0:
+            md = sm['modelV2']
+            if len(md.position.x) == TRAJECTORY_SIZE and len(md.position.y) == TRAJECTORY_SIZE:
+                x = md.position.x
+                y = md.position.y
+                dy = np.gradient(y, x)
+                d2y = np.gradient(dy, x)
+                curv = d2y / (1 + dy ** 2) ** 1.5
+                curv = curv[5:TRAJECTORY_SIZE-10]
+                a_y_max = 2.975 - v_ego * 0.0375  # ~1.85 @ 75mph, ~2.6 @ 25mph
+                v_curvature = np.sqrt(a_y_max / np.clip(np.abs(curv), 1e-4, None))
+                model_speed = np.mean(v_curvature) * 0.9 * self.curvature_gain
+                self.curve_speed = float(max(model_speed * CV.MS_TO_KPH, MIN_CURVE_SPEED))
+                if np.isnan(self.curve_speed):
+                    self.curve_speed = MAX_SPEED
+            else:
+                self.curve_speed = MAX_SPEED
+    
+        return  self.curve_speed
 
     def calc_laneProb(self, prob, v_ego):
         if len(prob) > 1:
