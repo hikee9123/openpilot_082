@@ -192,23 +192,6 @@ void start_capture()
   files_created++;
 }
 
-bool screen_lock_button_clicked(int touch_x, int touch_y, dashcam_element el)
-{
-  if (captureState == CAPTURE_STATE_NOT_CAPTURING)
-  {
-    // Don't register click if we're not recording
-    return false;
-  }
-
-  if (touch_x >= el.pos_x && touch_x <= el.pos_x + el.width)
-  {
-    if (touch_y >= el.pos_y && touch_y <= el.pos_y + el.height)
-    {
-      return true;
-    }
-  }
-  return false;
-}
 
 bool screen_button_clicked(int touch_x, int touch_y, int x, int y, int cx, int cy )
 {
@@ -334,17 +317,92 @@ void screen_toggle_record_state()
 }
 
 
+static int draw_measure(UIState *s,  const char* bb_value, const char* bb_uom, const char* bb_label,
+    int bb_x, int bb_y, int bb_uom_dx,
+    NVGcolor bb_valueColor, NVGcolor bb_labelColor, NVGcolor bb_uomColor,
+    int bb_valueFontSize, int bb_labelFontSize, int bb_uomFontSize )
+    {
+  //const UIScene *scene = &s->scene;
+  //const UIScene *scene = &s->scene;
+  nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
+  int dx = 0;
+  if (strlen(bb_uom) > 0) {
+    dx = (int)(bb_uomFontSize*2.5/2);
+   }
+  //print value
+  nvgFontFace(s->vg, "sans-semibold");
+  nvgFontSize(s->vg, bb_valueFontSize*2*fFontSize);
+  nvgFillColor(s->vg, bb_valueColor);
+  nvgText(s->vg, bb_x-dx/2, bb_y+ (int)(bb_valueFontSize*2.5)+5, bb_value, NULL);
+  //print label
+  nvgFontFace(s->vg, "sans-regular");
+  nvgFontSize(s->vg, bb_labelFontSize*2*fFontSize);
+  nvgFillColor(s->vg, bb_labelColor);
+  nvgText(s->vg, bb_x, bb_y + (int)(bb_valueFontSize*2.5)+5 + (int)(bb_labelFontSize*2.5)+5, bb_label, NULL);
+  //print uom
+  if (strlen(bb_uom) > 0) {
+      nvgSave(s->vg);
+    int rx =bb_x + bb_uom_dx + bb_valueFontSize -3;
+    int ry = bb_y + (int)(bb_valueFontSize*2.5/2)+25;
+    nvgTranslate(s->vg,rx,ry);
+    nvgRotate(s->vg, -1.5708); //-90deg in radians
+    nvgFontFace(s->vg, "sans-regular");
+    nvgFontSize(s->vg, (int)(bb_uomFontSize*2*fFontSize));
+    nvgFillColor(s->vg, bb_uomColor);
+    nvgText(s->vg, 0, 0, bb_uom, NULL);
+    nvgRestore(s->vg);
+  }
+  return (int)((bb_valueFontSize + bb_labelFontSize)*2.5) + 5;
+}
+
+static void draw_menu(UIState *s, int bb_x, int bb_y, int bb_w ) 
+{
+  UIScene &scene = s->scene;
+  int bb_rx = bb_x + (int)(bb_w/2);
+  int bb_ry = bb_y;
+  int bb_h = 5;
+  NVGcolor lab_color = nvgRGBA(255, 255, 255, 200);
+  NVGcolor uom_color = nvgRGBA(255, 255, 255, 200);
+  int value_fontSize=25;
+  int label_fontSize=15;
+  int uom_fontSize = 15;
+  int bb_uom_dx =  (int)(bb_w /2 - uom_fontSize*2.5) ;
+
+  // scene.dash_menu_no
+
+  //add visual radar relative distance
+  if( true )
+  {
+    char val_str[16];
+    char uom_str[6];
+    NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
+
+
+
+    snprintf(uom_str, sizeof(uom_str), "git pull");
+    bb_h +=draw_measure(s,  val_str, uom_str, "",
+        bb_rx, bb_ry, bb_uom_dx,
+        val_color, lab_color, uom_color,
+        value_fontSize, label_fontSize, uom_fontSize );
+    bb_ry = bb_y + bb_h;
+  }
+
+
+  //finally draw the frame
+  bb_h += 20;
+  nvgBeginPath(s->vg);
+    nvgRoundedRect(s->vg, bb_x, bb_y, bb_w, bb_h, 20);
+    nvgStrokeColor(s->vg, nvgRGBA(255,255,255,80));
+    nvgStrokeWidth(s->vg, 6);
+    nvgStroke(s->vg);
+}
 
 static void screen_menu_button(UIState *s, int touch_x, int touch_y, int touched)
 {
   // Set button to bottom left of screen
   UIScene &scene = s->scene;
-  //  if (s->vision_connected && s->plus_state == 0) {
-  //if (s->vision_connected == 0) return;
 
   nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
-
-
 
     int btn_w = 150;
     int btn_h = 150;
@@ -352,13 +410,12 @@ static void screen_menu_button(UIState *s, int touch_x, int touch_y, int touched
     int btn_y = 1080 - btn_h;
 
 
-  if( touched && screen_button_clicked(touch_x, touch_y, btn_x, btn_y, 100, 100) )
-  {
+    if( touched && screen_button_clicked(touch_x, touch_y, btn_x, btn_y, 100, 100) )
+    {
       scene.dash_menu_no++;
-      if( scene.dash_menu_no > 9 )
+      if( scene.dash_menu_no > 2 )
          scene.dash_menu_no = 0;
-
-  }
+    }
     
 
     nvgBeginPath(s->vg);
@@ -377,6 +434,12 @@ static void screen_menu_button(UIState *s, int touch_x, int touch_y, int touched
     else
     {
         fillColor = nvgRGBA(0, 0, 255, 250);
+
+        const int bb_dmr_w = 180;
+        const int bb_dmr_x = s->viz_rect.x + (s->viz_rect.w/2) - bb_dmr_w - (bdr_s * 2);
+        const int bb_dmr_y = (bdr_s + (bdr_s * 1.5)) + 220;
+
+        draw_menu( s, bb_dmr_x, bb_dmr_y, bb_dmr_w ) 
     }
 
     nvgFillColor(s->vg, fillColor);
@@ -385,7 +448,7 @@ static void screen_menu_button(UIState *s, int touch_x, int touch_y, int touched
 
 
     char  szText[50];
-    sprintf( szText, "%d", scene.dash_menu_no );
+    sprintf( szText, "M%d", scene.dash_menu_no );
 
     nvgText(s->vg, btn_x - 50, btn_y + 50, szText, NULL);
 }
