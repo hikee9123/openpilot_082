@@ -355,7 +355,7 @@ static void ui_draw_debug(UIState *s)
    ui_print( s, x_pos, y_pos+150, "lW:%.2f  cpuPerc:%d", laneWidth, cpuPerc );
 
     ui_print( s, x_pos, y_pos+250, "prob:%.2f, %.2f, %.2f, %.2f", lane_line_probs[0], lane_line_probs[1], lane_line_probs[2], lane_line_probs[3] );
-    ui_print( s, x_pos, y_pos+300, "edge:%.2f, %.2f", road_edge_stds[0], road_edge_stds[1] );
+   // ui_print( s, x_pos, y_pos+300, "edge:%.2f, %.2f", road_edge_stds[0], road_edge_stds[1] );
 
 
     

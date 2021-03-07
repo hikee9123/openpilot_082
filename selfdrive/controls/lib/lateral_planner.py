@@ -356,27 +356,21 @@ class LateralPlanner():
       fp2 = [5,7]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.desired_steering_wheel_angle_deg = self.limit_ctrl( org_angle_steers_des, limit_steers, steering_wheel_angle_deg )      
-    elif steeringPressed:
-      delta_steer = org_angle_steers_des - steering_wheel_angle_deg
-      if steering_wheel_angle_deg > 10 and steeringTorque > 0:
-        delta_steer = max( delta_steer, 0 )
-        delta_steer = min( delta_steer, DST_ANGLE_LIMIT )
-        self.desired_steering_wheel_angle_deg = steering_wheel_angle_deg + delta_steer
-      elif steering_wheel_angle_deg < -10  and steeringTorque < 0:
-        delta_steer = min( delta_steer, 0 )
-        delta_steer = max( delta_steer, -DST_ANGLE_LIMIT )        
-        self.desired_steering_wheel_angle_deg = steering_wheel_angle_deg + delta_steer
-      else:
-        if steeringTorque < 0:  # right
-          if delta_steer > 0:
-            self.desired_steering_wheel_angle_deg = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, steering_wheel_angle_deg )
-        elif steeringTorque > 0:  # left
-          if delta_steer < 0:
-            self.desired_steering_wheel_angle_deg = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, steering_wheel_angle_deg )
+    #elif steeringPressed:
+    #  delta_steer = org_angle_steers_des - steering_wheel_angle_deg
+    #  if steering_wheel_angle_deg > 10 and steeringTorque > 0:
+    #    delta_steer = max( delta_steer, 0 )
+    #    delta_steer = min( delta_steer, DST_ANGLE_LIMIT )
+    #    self.desired_steering_wheel_angle_deg = steering_wheel_angle_deg + delta_steer
+    #  elif steering_wheel_angle_deg < -10  and steeringTorque < 0:
+    #    delta_steer = min( delta_steer, 0 )
+    #    delta_steer = max( delta_steer, -DST_ANGLE_LIMIT )        
+    #    self.desired_steering_wheel_angle_deg = steering_wheel_angle_deg + delta_steer
+
 
     elif v_ego_kph < 30:  # 30
       xp = [15,30]
-      fp2 = [1,3]
+      fp2 = [3,5]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.desired_steering_wheel_angle_deg = self.limit_ctrl( org_angle_steers_des, limit_steers, steering_wheel_angle_deg )
 
