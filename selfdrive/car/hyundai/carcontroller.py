@@ -262,7 +262,7 @@ class CarController():
     if steer_req:
       can_sends.append( create_mdps12(self.packer, frame, CS.mdps12) )
 
-    str_log1 = 'torg:{:5.0f} dn={:.1f} up={:.1f}'.format( apply_steer, param.STEER_DELTA_DOWN, param.STEER_DELTA_UP   )
+    str_log1 = 'CS={:.0f} torg:{:5.0f} dn={:.1f} up={:.1f}'.format( self.curve_speed, apply_steer, param.STEER_DELTA_DOWN, param.STEER_DELTA_UP   )
     str_log2 = 'limit={:.0f} tm={:.1f} gap={:.0f}'.format( apply_steer_limit, self.timer1.sampleTime(), CS.cruiseGapSet  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
@@ -272,7 +272,7 @@ class CarController():
 
     run_speed_ctrl = CS.acc_active and self.SC != None
     if not run_speed_ctrl:
-      str_log2 = 'CS={:.0f} LKAS={:.0f}  steer={:5.0f}'.format( self.curve_speed,  CS.lkas_button_on,  CS.out.steeringTorque )
+      str_log2 = 'LKAS={:.0f}  steer={:5.0f}'.format( CS.lkas_button_on,  CS.out.steeringTorque )
       trace1.printf2( '{}'.format( str_log2 ) )
 
 

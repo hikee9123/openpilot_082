@@ -25,7 +25,7 @@ import common.MoveAvg as moveavg1
 
 
 MAX_SPEED = 255.0
-MIN_CURVE_SPEED = 32.
+MIN_CURVE_SPEED = 30.
 
 LON_MPC_STEP = 0.2  # first step is 0.2s
 MAX_SPEED_ERROR = 2.0
@@ -118,23 +118,26 @@ class SpdController():
 
 
     def cal_curve_speed(self, sm, v_ego, frame):
-        if frame % 10 == 0:
-            md = sm['modelV2']
-            if len(md.position.x) == TRAJECTORY_SIZE and len(md.position.y) == TRAJECTORY_SIZE:
-                x = md.position.x
-                y = md.position.y
-                dy = np.gradient(y, x)
-                d2y = np.gradient(dy, x)
-                curv = d2y / (1 + dy ** 2) ** 1.5
-                curv = curv[5:TRAJECTORY_SIZE-10]
-                a_y_max = 2.975 - v_ego * 0.0375  # ~1.85 @ 75mph, ~2.6 @ 25mph
-                v_curvature = np.sqrt(a_y_max / np.clip(np.abs(curv), 1e-4, None))
-                model_speed = np.mean(v_curvature) * 0.9 * self.curvature_gain
-                self.curve_speed = float(max(model_speed * CV.MS_TO_KPH, MIN_CURVE_SPEED))
-                if np.isnan(self.curve_speed):
-                    self.curve_speed = MAX_SPEED
-            else:
+        #if frame % 10 == 0:
+        md = sm['modelV2']
+        if len(md.position.x) == TRAJECTORY_SIZE and len(md.position.y) == TRAJECTORY_SIZE:
+            x = md.position.x
+            y = md.position.y
+            dy = np.gradient(y, x)
+            d2y = np.gradient(dy, x)
+            curv = d2y / (1 + dy ** 2) ** 1.5
+            curv = curv[5:TRAJECTORY_SIZE-10]
+            a_y_max = 2.975 - v_ego * 0.0375  # ~1.85 @ 75mph, ~2.6 @ 25mph
+            v_curvature = np.sqrt(a_y_max / np.clip(np.abs(curv), 1e-4, None))
+            model_speed = np.mean(v_curvature) * 0.9 * self.curvature_gain
+            self.curve_speed = float(max(model_speed * CV.MS_TO_KPH, MIN_CURVE_SPEED))
+            if np.isnan(self.curve_speed):
                 self.curve_speed = MAX_SPEED
+
+            if self.curve_speed > MAX_SPEED:
+               self.curve_speed = MAX_SPEED                
+        else:
+            self.curve_speed = MAX_SPEED
     
         return  self.curve_speed
 
@@ -156,7 +159,7 @@ class SpdController():
             # Don't slow down below 20mph
 
             model_speed *= CV.MS_TO_KPH
-            model_speed = max(30.0, model_speed)
+            model_speed = max(MIN_CURVE_SPEED, model_speed)
            # print( 'v_curvature = {}'.format( v_curvature) )
             #print( 'model_speed = {}  '.format( model_speed) )
 
@@ -257,14 +260,6 @@ class SpdController():
         else:
             dRel = 150
             vRel = 0
-
-
-        #if len(sm['modelV2'].leads) > 0:
-        #    lead_msg = sm['modelV2'].leads[0]
-        #    if lead_msg.prob > 0.5:
-        #        dRel = float(lead_msg.xyva[0] - RADAR_TO_CAMERA)
-        #        vRel = float(lead_msg.xyva[2])
-
 
         return dRel, vRel
 
