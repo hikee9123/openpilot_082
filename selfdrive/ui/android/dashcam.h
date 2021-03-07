@@ -377,7 +377,7 @@ static void draw_menu(UIState *s, int bb_x, int bb_y, int bb_w )
     char uom_str[6];
     NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
 
-    snprintf(uom_str, sizeof(uom_str), "%d.git pull", scene.dash_menu_no );
+    snprintf(uom_str, sizeof(uom_str), "%d", scene.dash_menu_no );
     bb_h +=draw_measure(s,  val_str, uom_str, "git pull",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
@@ -432,12 +432,6 @@ static void screen_menu_button(UIState *s, int touch_x, int touch_y, int touched
     else
     {
         fillColor = nvgRGBA(0, 0, 255, 250);
-
-        const int bb_dmr_w = 180;
-        const int bb_dmr_x = s->viz_rect.x + (s->viz_rect.w/2) - bb_dmr_w - (bdr_s * 2);
-        const int bb_dmr_y = (bdr_s + (bdr_s * 1.5)) + 220;
-
-        draw_menu( s, bb_dmr_x, bb_dmr_y, bb_dmr_w );
     }
 
     nvgFillColor(s->vg, fillColor);
@@ -446,9 +440,17 @@ static void screen_menu_button(UIState *s, int touch_x, int touch_y, int touched
 
 
     char  szText[50];
-    sprintf( szText, "M%d", scene.dash_menu_no );
-
+    sprintf( szText, "%d", scene.dash_menu_no );
     nvgText(s->vg, btn_x - 50, btn_y + 50, szText, NULL);
+
+    if( scene.dash_menu_no )
+    {
+        const int bb_dmr_w = 180;
+        const int bb_dmr_x = s->viz_rect.x + (s->viz_rect.w/2) - bb_dmr_w - (bdr_s * 2);
+        const int bb_dmr_y = (bdr_s + (bdr_s * 1.5)) + 220;
+
+        draw_menu( s, bb_dmr_x, bb_dmr_y, bb_dmr_w );
+    }
 }
 
 void dashcam(UIState *s, int touch_x, int touch_y, int touched)
