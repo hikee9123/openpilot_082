@@ -446,11 +446,15 @@ static void screen_menu_button(UIState *s, int touch_x, int touch_y, int touched
 
     if( scene.dash_menu_no == 2 )
     {
-        const int bb_dmr_w = 300;
-        const int bb_dmr_x = s->viz_rect.x + (s->viz_rect.w * 0.95) - bb_dmr_w - (bdr_s * 2);
-        const int bb_dmr_y = (bdr_s + (bdr_s * 1.5)) + 220;
+      const int bb_dmr_w = 300;
+      const int bb_dmr_x = s->viz_rect.x + (s->viz_rect.w * 0.92) - bb_dmr_w - (bdr_s * 2);
+      const int bb_dmr_y = (bdr_s + (bdr_s * 1.5)) + 220;
 
-        draw_menu( s, bb_dmr_x, bb_dmr_y, bb_dmr_w );
+      draw_menu( s, bb_dmr_x, bb_dmr_y, bb_dmr_w );
+      if( touched && screen_button_clicked(touch_x, touch_y, bb_dmr_x, bb_dmr_y, bb_dmr_w, 100) )
+      { 
+         printf("git pull\n");
+      }
     }
 }
 
