@@ -336,7 +336,7 @@ static void ui_draw_debug(UIState *s)
   float model_speed = scene.controls_state.getModelSpeed();
 
   auto lane_line_probs = scene.modelDataV2.getLaneLineProbs();
-  auto road_edge_stds = scene.modelDataV2.getRoadEdges();
+  //auto road_edge_stds = scene.modelDataV2.getRoadEdges();
  // float curvature = scene.controls_state.getCurvature();
 
   nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
