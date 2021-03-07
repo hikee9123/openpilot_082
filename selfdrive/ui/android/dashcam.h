@@ -368,7 +368,7 @@ static void draw_menu(UIState *s, int bb_x, int bb_y, int bb_w )
   int uom_fontSize = 15;
   int bb_uom_dx =  (int)(bb_w /2 - uom_fontSize*2.5) ;
 
-   scene.dash_menu_no
+
 
   //add visual radar relative distance
   if( true )
@@ -378,7 +378,7 @@ static void draw_menu(UIState *s, int bb_x, int bb_y, int bb_w )
     NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
 
     snprintf(uom_str, sizeof(uom_str), "%d.git pull", scene.dash_menu_no );
-    bb_h +=draw_measure(s,  val_str, uom_str, "",
+    bb_h +=draw_measure(s,  val_str, uom_str, "git pull",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
