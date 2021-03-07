@@ -377,6 +377,7 @@ static void draw_menu(UIState *s, int bb_x, int bb_y, int bb_w )
     char uom_str[20];
     NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
 
+    snprintf(val_str, sizeof(val_str), "git pull");
     snprintf(uom_str, sizeof(uom_str), "%d", scene.dash_menu_no );
     bb_h +=draw_measure(s,  val_str, uom_str, "git pull",
         bb_rx, bb_ry, bb_uom_dx,
@@ -446,7 +447,7 @@ static void screen_menu_button(UIState *s, int touch_x, int touch_y, int touched
     if( scene.dash_menu_no )
     {
         const int bb_dmr_w = 300;
-        const int bb_dmr_x = s->viz_rect.x + (s->viz_rect.w*0.7) - bb_dmr_w - (bdr_s * 2);
+        const int bb_dmr_x = s->viz_rect.x + (s->viz_rect.w) - bb_dmr_w - (bdr_s * 2);
         const int bb_dmr_y = (bdr_s + (bdr_s * 1.5)) + 220;
 
         draw_menu( s, bb_dmr_x, bb_dmr_y, bb_dmr_w );
