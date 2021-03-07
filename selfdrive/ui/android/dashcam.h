@@ -453,6 +453,7 @@ static void screen_menu_button(UIState *s, int touch_x, int touch_y, int touched
       draw_menu( s, bb_dmr_x, bb_dmr_y, bb_dmr_w );
       if( touched && screen_button_clicked(touch_x, touch_y, bb_dmr_x, bb_dmr_y, bb_dmr_w, 100) )
       { 
+        
          scene.dash_menu_no = 0;
          printf("git pull\n");
          system("git pull");
