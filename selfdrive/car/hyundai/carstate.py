@@ -202,6 +202,18 @@ class CarState(CarStateBase):
 
 
     if not ret.cruiseState.available:
+      Counter = cp.vl["HDA11_MFC"]['Counter']
+      NEW_SIGNAL_1 = cp.vl["HDA11_MFC"]['NEW_SIGNAL_1']
+      NEW_SIGNAL_2 = cp.vl["HDA11_MFC"]['NEW_SIGNAL_2']
+      NEW_SIGNAL_3 = cp.vl["HDA11_MFC"]['NEW_SIGNAL_3']
+      NEW_SIGNAL_4 = cp.vl["HDA11_MFC"]['NEW_SIGNAL_4']
+      NEW_SIGNAL_5 = cp.vl["HDA11_MFC"]['NEW_SIGNAL_5']
+      NEW_SIGNAL_6 = cp.vl["HDA11_MFC"]['NEW_SIGNAL_6']
+      NEW_SIGNAL_7 = cp.vl["HDA11_MFC"]['NEW_SIGNAL_7']
+      NEW_SIGNAL_8 = cp.vl["HDA11_MFC"]['NEW_SIGNAL_8']
+      NEW_SIGNAL_9 = cp.vl["HDA11_MFC"]['NEW_SIGNAL_9']
+
+
       # LFAHDA test
       HDA_USM = cp.vl["LFAHDA_MFC"]['HDA_USM']
       HDA_Active = cp.vl["LFAHDA_MFC"]['HDA_Active']
@@ -214,8 +226,13 @@ class CarState(CarStateBase):
       LFA_Icon_State = cp.vl["LFAHDA_MFC"]['LFA_Icon_State']
       NEW_SIGNAL_1 = cp.vl["LFAHDA_MFC"]['NEW_SIGNAL_1']
 
-      str_log1 = 'U:{:.0f} W:{:.0f} I:{:.0f} A:{:.0f} C:{:.0f} V:{:.0f}'.format( HDA_USM, HDA_SysWarning, HDA_Icon_State, HDA_Active, HDA_Chime, HDA_VSetReq )
-      str_log2 = 'U:{:.0f} W:{:.0f} I:{:.0f} S:{:.0f}'.format( LFA_USM, LFA_SysWarning, LFA_Icon_State, NEW_SIGNAL_1 )
+      if self.cruiseGapSet == 3:
+        str_log1 = 'U:{:.0f} W:{:.0f} I:{:.0f} A:{:.0f} C:{:.0f} V:{:.0f}'.format( HDA_USM, HDA_SysWarning, HDA_Icon_State, HDA_Active, HDA_Chime, HDA_VSetReq )
+        str_log2 = 'U:{:.0f} W:{:.0f} I:{:.0f} S:{:.0f} NA:{:.0f} NS:{:.0f}'.format( LFA_USM, LFA_SysWarning, LFA_Icon_State, NEW_SIGNAL_1, self.Navi_SCC_Camera_Act, self.Navi_SCC_Camera_Status )
+      else:
+        str_log1 = '1:{:.0f} 2:{:.0f} 3:{:.0f} 4:{:.0f} 5:{:.0f}'.format( NEW_SIGNAL_1, NEW_SIGNAL_2, NEW_SIGNAL_3, NEW_SIGNAL_4, NEW_SIGNAL_5  )
+        str_log2 = '6:{:.0f} 7:{:.0f} 8:{:.0f} 9:{:.0f} C:{:.0f}'.format( NEW_SIGNAL_6, NEW_SIGNAL_7, NEW_SIGNAL_8, NEW_SIGNAL_9, Counter )
+
 
       trace1.printf( 'HDA={}'.format( str_log1 ) )
       trace1.printf2( 'LFA={}'.format( str_log2 ) )
@@ -495,6 +512,7 @@ class CarState(CarStateBase):
       ("PRESSURE_RL", "TPMS11", 0),
       ("PRESSURE_RR", "TPMS11", 0),
 
+      # 1157
       ("HDA_USM", "LFAHDA_MFC", 0),
       ("HDA_Active","LFAHDA_MFC", 0),
       ("HDA_Icon_State","LFAHDA_MFC", 0),
@@ -504,7 +522,19 @@ class CarState(CarStateBase):
       ("LFA_USM","LFAHDA_MFC", 0),
       ("LFA_SysWarning","LFAHDA_MFC", 0),
       ("LFA_Icon_State","LFAHDA_MFC", 0),
-      ("NEW_SIGNAL_1","LFAHDA_MFC", 0),      
+      ("NEW_SIGNAL_1","LFAHDA_MFC", 0),
+
+      # 1156
+      ("Counter","HDA11_MFC", 0),
+      ("NEW_SIGNAL_1","HDA11_MFC", 0),
+      ("NEW_SIGNAL_2","HDA11_MFC", 0),
+      ("NEW_SIGNAL_3","HDA11_MFC", 0),
+      ("NEW_SIGNAL_4","HDA11_MFC", 0),
+      ("NEW_SIGNAL_5","HDA11_MFC", 0),
+      ("NEW_SIGNAL_6","HDA11_MFC", 0),
+      ("NEW_SIGNAL_7","HDA11_MFC", 0),
+      ("NEW_SIGNAL_8","HDA11_MFC", 0),
+      ("NEW_SIGNAL_9","HDA11_MFC", 0),
     ]
 
     checks = [
