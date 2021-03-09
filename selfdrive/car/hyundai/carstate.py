@@ -7,6 +7,7 @@ from selfdrive.config import Conversions as CV
 from selfdrive.car.hyundai.spdcontroller  import SpdController
 from selfdrive.car.hyundai.values import Buttons
 
+import common.log as trace1
 
 GearShifter = car.CarState.GearShifter
 
@@ -198,6 +199,26 @@ class CarState(CarStateBase):
     #self.brake_error = cp.vl["TCS13"]['ACCEnable'] != 0 # 0 ACC CONTROL ENABLED, 1-3 ACC CONTROL DISABLED
     #self.prev_cruise_buttons = self.cruise_buttons
     #self.cruise_buttons = cp.vl["CLU11"]["CF_Clu_CruiseSwState"]
+
+
+    if not ret.cruiseState.available:
+      # LFAHDA test
+      HDA_USM = cp.vl["LFAHDA_MFC"]['HDA_USM']
+      HDA_Active = cp.vl["LFAHDA_MFC"]['HDA_Active']
+      HDA_Icon_State = cp.vl["LFAHDA_MFC"]['HDA_Icon_State']
+      HDA_Chime = cp.vl["LFAHDA_MFC"]['HDA_Chime']
+      HDA_VSetReq = cp.vl["LFAHDA_MFC"]['HDA_VSetReq']
+      HDA_SysWarning = cp.vl["LFAHDA_MFC"]['HDA_SysWarning']
+      LFA_USM = cp.vl["LFAHDA_MFC"]['LFA_USM']
+      LFA_SysWarning = cp.vl["LFAHDA_MFC"]['LFA_SysWarning']
+      LFA_Icon_State = cp.vl["LFAHDA_MFC"]['LFA_Icon_State']
+      NEW_SIGNAL_1 = cp.vl["LFAHDA_MFC"]['NEW_SIGNAL_1']
+
+      str_log1 = 'U:{:.0f} W:{:.0f} I:{:.0f} A:{:.0f} C:{:.0f} V:{:.0f}'.format( HDA_USM, HDA_SysWarning, HDA_Icon_State, HDA_Active, HDA_Chime, HDA_VSetReq )
+      str_log2 = 'U:{:.0f} W:{:.0f} I:{:.0f} S:{:.0f}'.format( LFA_USM, LFA_SysWarning, LFA_Icon_State, NEW_SIGNAL_1 )
+
+      trace1.printf( 'HDA={}'.format( str_log1 ) )
+      trace1.printf2( 'LFA={}'.format( str_log2 ) )
 
     return ret
 
