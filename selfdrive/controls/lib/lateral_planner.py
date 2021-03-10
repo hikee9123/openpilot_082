@@ -134,36 +134,36 @@ class LateralPlanner():
 
 
   def atom_tune( self, v_ego_kph, sr_value,  atomTuning ):  
-    self.cv_KPH = atomTuning.cvKPH
-    self.cv_BPV = atomTuning.cvBPV
+    self.sr_KPH = atomTuning.cvKPH
+    self.sr_BPV = atomTuning.cvBPV
     self.cv_steerRatioV = atomTuning.cvsteerRatioV
-    self.cv_SteerRatio = []
+    self.sr_SteerRatio = []
 
     nPos = 0
-    for steerRatio in self.cv_BPV:  # steerRatio
-      self.cv_SteerRatio.append( interp( sr_value, steerRatio, self.cv_steerRatioV[nPos] ) )
+    for steerRatio in self.sr_BPV:  # steerRatio
+      self.sr_SteerRatio.append( interp( sr_value, steerRatio, self.cv_steerRatioV[nPos] ) )
       nPos += 1
       if nPos > 20:
         break
 
-    steerRatio = interp( v_ego_kph, self.cv_KPH, self.cv_SteerRatio )
+    steerRatio = interp( v_ego_kph, self.sr_KPH, self.sr_SteerRatio )
 
     return steerRatio
 
   def atom_actuatorDelay( self, v_ego_kph, sr_value, atomTuning ):
-    self.cv_KPH = atomTuning.cvKPH
-    self.cv_BPV = atomTuning.cvBPV
+    self.sr_KPH = atomTuning.cvKPH
+    self.sr_BPV = atomTuning.cvBPV
     self.cv_ActuatorDelayV = atomTuning.cvsteerActuatorDelayV
-    self.cv_ActuatorDelay = []
+    self.sr_ActuatorDelay = []
 
     nPos = 0
-    for steerRatio in self.cv_BPV:
-      self.cv_ActuatorDelay.append( interp( sr_value, steerRatio, self.cv_ActuatorDelayV[nPos] ) )
+    for steerRatio in self.sr_BPV:
+      self.sr_ActuatorDelay.append( interp( sr_value, steerRatio, self.cv_ActuatorDelayV[nPos] ) )
       nPos += 1
       if nPos > 10:
         break
 
-    actuatorDelay = interp( v_ego_kph, self.cv_KPH, self.cv_ActuatorDelay )
+    actuatorDelay = interp( v_ego_kph, self.sr_KPH, self.sr_ActuatorDelay )
 
     return actuatorDelay
 
@@ -191,25 +191,22 @@ class LateralPlanner():
     steering_wheel_angle_deg = sm['carState'].steeringAngleDeg
 
     v_ego_kph = v_ego * CV.MS_TO_KPH
-    #self.steerActuatorDelay = self.atom_actuatorDelay( v_ego_kph, steering_wheel_angle_deg,  atomTuning )
+    self.steerActuatorDelay = self.atom_actuatorDelay( v_ego_kph, steering_wheel_angle_deg,  atomTuning )
 
     # Update vehicle model
-    sr_value = self.desired_steering_wheel_angle_deg
     if lateralsRatom.learnerParams == 2:
       sr_value = self.desired_steering_wheel_angle_deg
       sr = self.atom_tune( v_ego_kph, sr_value, atomTuning) 
     elif lateralsRatom.learnerParams == 3:
       sr_value = sm['controlsState'].modelSpeed
-      #sr_value = self.m_avg.get_avg( sr_value, 5)
+      sr_value = self.m_avg.get_avg( sr_value, 5)
       sr = self.atom_tune( v_ego_kph, sr_value, atomTuning)
     else:
       sr = max(sm['liveParameters'].steerRatio, 0.1)
-      
-    self.steerActuatorDelay = self.atom_actuatorDelay( v_ego_kph, sr_value, atomTuning )
-    x = max(sm['liveParameters'].stiffnessFactor, 0.1)
-    VM.update_params(x, sr)
 
+    x = max(sm['liveParameters'].stiffnessFactor, 0.1)
     
+    VM.update_params(x, sr)
     curvature_factor = VM.curvature_factor(v_ego)
     measured_curvature = -curvature_factor * math.radians(steering_wheel_angle_deg - steering_wheel_angle_offset_deg) / VM.sR
 
@@ -328,7 +325,7 @@ class LateralPlanner():
     self.cur_state.curvature = interp(DT_MDL, self.t_idxs[:MPC_N+1], self.mpc_solution.curvature)
 
     # TODO this needs more thought, use .2s extra for now to estimate other delays
-    delay = self.steerActuatorDelay + .1
+    delay = self.steerActuatorDelay + .2
     current_curvature = self.mpc_solution.curvature[0]
     psi = interp(delay, self.t_idxs[:MPC_N+1], self.mpc_solution.psi)
     next_curvature_rate = self.mpc_solution.curvature_rate[0]
