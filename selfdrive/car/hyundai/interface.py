@@ -43,7 +43,7 @@ class CarInterface(CarInterfaceBase):
     ret.steerActuatorDelay = 0.2  # Default delay
     ret.steerRateCost = 0.9
     ret.steerLimitTimer = 0.4
-    tire_stiffness_factor = 0.8
+    tire_stiffness_factor = 1.
 
     ret.maxSteeringAngleDeg = 90.
 

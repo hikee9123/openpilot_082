@@ -194,6 +194,7 @@ class LateralPlanner():
     #self.steerActuatorDelay = self.atom_actuatorDelay( v_ego_kph, steering_wheel_angle_deg,  atomTuning )
 
     # Update vehicle model
+    sr_value = self.desired_steering_wheel_angle_deg
     if lateralsRatom.learnerParams == 2:
       sr_value = self.desired_steering_wheel_angle_deg
       sr = self.atom_tune( v_ego_kph, sr_value, atomTuning) 
@@ -203,13 +204,12 @@ class LateralPlanner():
       sr = self.atom_tune( v_ego_kph, sr_value, atomTuning)
     else:
       sr = max(sm['liveParameters'].steerRatio, 0.1)
-      sr_value = self.desired_steering_wheel_angle_deg
-
+      
+    self.steerActuatorDelay = self.atom_actuatorDelay( v_ego_kph, sr_value, atomTuning )
     x = max(sm['liveParameters'].stiffnessFactor, 0.1)
-    
     VM.update_params(x, sr)
 
-    self.steerActuatorDelay = self.atom_actuatorDelay( v_ego_kph, sr_value, atomTuning )
+    
     curvature_factor = VM.curvature_factor(v_ego)
     measured_curvature = -curvature_factor * math.radians(steering_wheel_angle_deg - steering_wheel_angle_offset_deg) / VM.sR
 
