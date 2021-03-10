@@ -134,36 +134,36 @@ class LateralPlanner():
 
 
   def atom_tune( self, v_ego_kph, sr_value,  atomTuning ):  
-    self.sr_KPH = atomTuning.cvKPH
-    self.sr_BPV = atomTuning.cvBPV
+    self.cv_KPH = atomTuning.cvKPH
+    self.cv_BPV = atomTuning.cvBPV
     self.cv_steerRatioV = atomTuning.cvsteerRatioV
-    self.sr_SteerRatio = []
+    self.cv_SteerRatio = []
 
     nPos = 0
-    for steerRatio in self.sr_BPV:  # steerRatio
-      self.sr_SteerRatio.append( interp( sr_value, steerRatio, self.cv_steerRatioV[nPos] ) )
+    for steerRatio in self.cv_BPV:  # steerRatio
+      self.cv_SteerRatio.append( interp( sr_value, steerRatio, self.cv_steerRatioV[nPos] ) )
       nPos += 1
       if nPos > 20:
         break
 
-    steerRatio = interp( v_ego_kph, self.sr_KPH, self.sr_SteerRatio )
+    steerRatio = interp( v_ego_kph, self.cv_KPH, self.cv_SteerRatio )
 
     return steerRatio
 
   def atom_actuatorDelay( self, v_ego_kph, sr_value, atomTuning ):
-    self.sr_KPH = atomTuning.cvKPH
-    self.sr_BPV = atomTuning.cvBPV
+    self.cv_KPH = atomTuning.cvKPH
+    self.cv_BPV = atomTuning.cvBPV
     self.cv_ActuatorDelayV = atomTuning.cvsteerActuatorDelayV
-    self.sr_ActuatorDelay = []
+    self.cv_ActuatorDelay = []
 
     nPos = 0
-    for steerRatio in self.sr_BPV:
-      self.sr_ActuatorDelay.append( interp( sr_value, steerRatio, self.cv_ActuatorDelayV[nPos] ) )
+    for steerRatio in self.cv_BPV:
+      self.cv_ActuatorDelay.append( interp( sr_value, steerRatio, self.cv_ActuatorDelayV[nPos] ) )
       nPos += 1
       if nPos > 10:
         break
 
-    actuatorDelay = interp( v_ego_kph, self.sr_KPH, self.sr_ActuatorDelay )
+    actuatorDelay = interp( v_ego_kph, self.cv_KPH, self.cv_ActuatorDelay )
 
     return actuatorDelay
 
@@ -328,7 +328,7 @@ class LateralPlanner():
     self.cur_state.curvature = interp(DT_MDL, self.t_idxs[:MPC_N+1], self.mpc_solution.curvature)
 
     # TODO this needs more thought, use .2s extra for now to estimate other delays
-    delay = self.steerActuatorDelay
+    delay = self.steerActuatorDelay + .1
     current_curvature = self.mpc_solution.curvature[0]
     psi = interp(delay, self.t_idxs[:MPC_N+1], self.mpc_solution.psi)
     next_curvature_rate = self.mpc_solution.curvature_rate[0]
