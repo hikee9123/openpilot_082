@@ -402,7 +402,7 @@ FEATURES = {
                   CAR.SANTA_FE, CAR.KIA_NIRO_EV]),
 
   # send LFA MFA message for new HKG models
-  "use_lfa_mfa": set([ CAR.GRANDEUR_HEV_19, CAR.PALISADE ]),                  
+  "use_lfa_mfa": set([ CAR.PALISADE ]),                  
 }
 
 EV_HYBRID = set([CAR.GRANDEUR_HEV_19,CAR.IONIQ_EV_2020, CAR.IONIQ_EV_LTD, CAR.IONIQ, CAR.KONA_EV, CAR.KIA_NIRO_EV])
