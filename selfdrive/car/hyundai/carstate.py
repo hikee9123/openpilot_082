@@ -548,6 +548,8 @@ class CarState(CarStateBase):
       ("CGW4", 5),
       ("WHL_SPD11", 50),
       ("SAS11", 100),
+      ("HDA11_MFC", 5),
+      ("LFAHDA_MFC", 5),
     ]
 
     if not CP.openpilotLongitudinalControl:
