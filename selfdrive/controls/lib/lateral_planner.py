@@ -203,6 +203,7 @@ class LateralPlanner():
       sr = self.atom_tune( v_ego_kph, sr_value, atomTuning)
     else:
       sr = max(sm['liveParameters'].steerRatio, 0.1)
+      sr_value = self.desired_steering_wheel_angle_deg
 
     x = max(sm['liveParameters'].stiffnessFactor, 0.1)
     
