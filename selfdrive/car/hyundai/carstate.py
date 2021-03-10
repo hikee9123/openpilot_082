@@ -548,7 +548,7 @@ class CarState(CarStateBase):
       ("CGW4", 5),
       ("WHL_SPD11", 50),
       ("SAS11", 100),
-      ("HDA11_MFC", 10),
+      ("HDA11_MFC", 50),
       #("LFAHDA_MFC", 10),
     ]
 
