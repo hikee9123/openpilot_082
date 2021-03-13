@@ -230,55 +230,6 @@ class CarInterface(CarInterfaceBase):
 
     # atom  START
     if ATOMC.tun_type == 'pid':
-      ret.lateralTuning.pid.kpBP, ret.lateralTuning.pid.kpV = [[0.], [0.25]]
-      ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kiV = [[0.], [0.05]]
-      ret.lateralTuning.pid.kdBP, ret.lateralTuning.pid.kdV = [[0.],[1.]]
-
-    elif ATOMC.tun_type == 'indi':
-      ret.lateralTuning.init('indi')
-      ret.lateralTuning.indi.innerLoopGain = 3.0
-      ret.lateralTuning.indi.outerLoopGain = 2.0
-      ret.lateralTuning.indi.timeConstant = 1.0
-      ret.lateralTuning.indi.actuatorEffectiveness = 1.5
-    elif ATOMC.tun_type == 'lqr':
-      ret.lateralTuning.init('lqr')
-      ret.lateralTuning.lqr.scale = 2000.0
-      ret.lateralTuning.lqr.ki = 0.01
-      ret.lateralTuning.lqr.a = [0., 1., -0.22619643, 1.21822268]
-      ret.lateralTuning.lqr.b = [-1.92006585e-04, 3.95603032e-05]
-      ret.lateralTuning.lqr.c = [1., 0.]
-      ret.lateralTuning.lqr.k = [-100., 450.]
-      ret.lateralTuning.lqr.l = [0.22, 0.318]
-      ret.lateralTuning.lqr.dcGain = 0.003
-
-
-    # atom  START
-    if ATOMC.tun_type == 'pid':
-      ret.lateralTuning.pid.kpBP, ret.lateralTuning.pid.kpV = [[0.], [0.25]]
-      ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kiV = [[0.], [0.05]]
-      ret.lateralTuning.pid.kdBP, ret.lateralTuning.pid.kdV = [[0.],[1.]]
-
-    elif ATOMC.tun_type == 'indi':
-      ret.lateralTuning.init('indi')
-      ret.lateralTuning.indi.innerLoopGain = 3.0
-      ret.lateralTuning.indi.outerLoopGain = 2.0
-      ret.lateralTuning.indi.timeConstant = 1.0
-      ret.lateralTuning.indi.actuatorEffectiveness = 1.5
-    elif ATOMC.tun_type == 'lqr':
-      ret.lateralTuning.init('lqr')
-      ret.lateralTuning.lqr.scale = 2000.0
-      ret.lateralTuning.lqr.ki = 0.01
-      ret.lateralTuning.lqr.a = [0., 1., -0.22619643, 1.21822268]
-      ret.lateralTuning.lqr.b = [-1.92006585e-04, 3.95603032e-05]
-      ret.lateralTuning.lqr.c = [1., 0.]
-      ret.lateralTuning.lqr.k = [-100., 450.]
-      ret.lateralTuning.lqr.l = [0.22, 0.318]
-      ret.lateralTuning.lqr.dcGain = 0.003
-
-
-
-    # atom  START
-    if ATOMC.tun_type == 'pid':
       ret.lateralTuning.pid.kpBP, ret.lateralTuning.pid.kpV = [[0.], [0.2]]
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kiV = [[0.], [0.02]]
       ret.lateralTuning.pid.kdBP, ret.lateralTuning.pid.kdV = [[0.],[1.]]
