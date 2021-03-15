@@ -19,6 +19,6 @@
   "sR_pid_deadzone": 0.0,
   "steerLimitTimer": 0.7,
   "steerOffset": 0.0,
-  "steerRateCost": 1.0,
+  "steerRateCost": 1.5,
   "cameraOffset": 0.00
 }
