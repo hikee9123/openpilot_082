@@ -45,7 +45,7 @@ class CarInterface(CarInterfaceBase):
     ret.steerLimitTimer = 0.4
     tire_stiffness_factor = 1.1
 
-    ret.maxSteeringAngleDeg = 90.
+    ret.maxSteeringAngleDeg = 180.
 
     eps_modified = False
     for fw in car_fw:
