@@ -182,8 +182,7 @@ class CarController():
         sec_pval = 10  # 운전자 => 오파  (sec)      
     else:
       sec_mval = 0.5  # 오파 => 운전자.  (sec)
-      sec_pval = 10 #  운전자 => 오파  (sec)
-      self.steer_torque_over_timer = 50    
+      sec_pval = 10 #  운전자 => 오파 
 
 
     if self.steer_torque_over_timer:
