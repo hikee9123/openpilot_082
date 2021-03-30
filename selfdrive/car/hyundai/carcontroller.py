@@ -165,7 +165,7 @@ class CarController():
       param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, nDN )
 
 
-
+             
     if abs(CS.out.steeringAngleDeg) >= CS.CP.maxSteeringAngleDeg: # and CS.out.steeringPressed:
       sec_mval = 0.5  # 오파 => 운전자.  (sec)
       sec_pval = 10 #  운전자 => 오파  (sec)
