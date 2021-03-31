@@ -244,7 +244,7 @@ class CarController():
     steer_req = 1 if apply_steer else 0
     self.apply_steer_last = apply_steer
 
-    sys_warning, self.hud_sys_state = self.process_hud_alert( lkas_active, c, CS.Navi_SCC_Camera_Act )
+    sys_warning, self.hud_sys_state = self.process_hud_alert( lkas_active, c )
 
     if frame == 0: # initialize counts from last received count signals
       self.lkas11_cnt = CS.lkas11["CF_Lkas_MsgCount"] + 1
