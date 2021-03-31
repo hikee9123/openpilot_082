@@ -177,15 +177,17 @@ class CarController():
       sec_mval = 0.5  # 오파 => 운전자.  (sec)
       sec_pval = 10   #  운전자 => 오파 
 
-
+    
     if path_plan.laneChangeState != LaneChangeState.off:
       self.steer_torque_over_timer = 0
     elif CS.out.leftBlinker or CS.out.rightBlinker:
       sec_mval = 0.5  # 오파 => 운전자.
       sec_pval = 10 # 운전자 => 오파  (sec)
 
-    if v_ego_kph > 5 and CS.out.steeringPressed and CS.out.cruiseState.enabled:  #사용자 핸들 토크
-        self.steer_torque_over_timer = 50
+    if not CS.out.cruiseState.enabled:
+      self.steer_torque_over_timer = 0
+    elif v_ego_kph > 5 and abs(CS.out.steeringTorque) > 250:  #사용자 핸들 토크
+      self.steer_torque_over_timer = 50
     elif self.steer_torque_over_timer:
       self.steer_torque_over_timer -= 1
 
